@@ -28,7 +28,7 @@ const ProfileMiniCard = () => {
     hostel: "A",
     hostelType: "Boys",
     mealStatus: "ON",
-    phone: 1234567890,
+    phone: 8458030129,
   };
 
   return (
