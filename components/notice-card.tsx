@@ -33,7 +33,9 @@ const NoticesCard = () => {
       </CardContent>
       <CardFooter className="mt-auto">
         <Link href={"/student/notices"} className="ml-auto">
-          <Button variant={"info"}>View</Button>
+          <Button size={"responsive"} variant={"info"}>
+            View
+          </Button>
         </Link>
       </CardFooter>
     </Card>

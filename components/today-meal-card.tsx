@@ -21,7 +21,7 @@ const TodayMealCard = () => {
     special: true,
   };
   return (
-    <Card>
+    <Card className="">
       <CardHeader>
         <CardTitle>
           {"Today's"} {currentMeal.type}
@@ -39,16 +39,17 @@ const TodayMealCard = () => {
           </p>
         </CardDescription>
       </CardContent>
-      <CardFooter className="flex flex-row-reverse gap-2 mt-auto ml-auto">
-        <Button variant={"success"}>
+      <CardFooter className="flex flex-row-reverse gap-1 md:gap-2 mt-auto ml-auto">
+        <Button variant={"success"} size={"responsive"}>
           <Check />
         </Button>
-        <Button variant={"destructive"}>
+        <Button variant={"destructive"} size={"responsive"}>
           <X />
         </Button>
         <Button
           onClick={() => setPreference(!preference)}
           variant={"secondary"}
+          size={"responsive"}
         >
           <Circle
             className={`${preference ? "bg-destructive" : "bg-success"} text-secondary rounded-full`}

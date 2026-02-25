@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, User } from "lucide-react";
 
 const GuestMealCard = () => {
   const price = 80;
@@ -28,12 +28,15 @@ const GuestMealCard = () => {
             <span className="font-medium">₹80</span>
           )}
         </div>
-        <div className="flex flex-col md:flex-row gap-2 md:items-center transition-transform">
-          <p className="">Guest: {count}</p>
-          <div className="flex">
+        <div className="flex flex-row gap-4 items-center">
+          <div className="flex gap-2 md:gap-4">
+            <User /> {count}
+          </div>
+          <div className="flex flex-col items-center md:flex-row">
             <Button
               onClick={() => setCount((prev) => prev + 1)}
               variant={"secondary"}
+              size={"responsive"}
             >
               <Plus />
             </Button>
@@ -41,6 +44,7 @@ const GuestMealCard = () => {
               <Button
                 onClick={() => setCount((prev) => prev - 1)}
                 variant={"secondary"}
+                size={"responsive"}
               >
                 <Minus />
               </Button>
@@ -49,7 +53,11 @@ const GuestMealCard = () => {
         </div>
       </CardContent>
       <CardFooter className="mt-auto">
-        <Button disabled={count ? false : true} className="w-full ">
+        <Button
+          disabled={count ? false : true}
+          size={"responsive"}
+          className="w-full"
+        >
           Request
         </Button>
       </CardFooter>
