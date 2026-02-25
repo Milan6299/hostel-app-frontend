@@ -6,7 +6,10 @@ const NutritionInfoCard = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Nutrition Info</CardTitle>
+        <CardTitle className="flex items-center justify-between">
+          Nutrition
+          <Badge className="">High Protein</Badge>
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
         <div className="flex justify-between">
@@ -25,8 +28,6 @@ const NutritionInfoCard = () => {
           <span>Fat</span>
           <span>18g</span>
         </div>
-
-        <Badge className="mt-2">High Protein Lunch</Badge>
       </CardContent>
     </Card>
   );

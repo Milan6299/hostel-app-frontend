@@ -25,7 +25,7 @@ const GuestMealCard = () => {
           {count !== 0 ? (
             <span>₹{count * price}</span>
           ) : (
-            <span className="font-medium">₹80/guest</span>
+            <span className="font-medium">₹80</span>
           )}
         </div>
         <div className="flex flex-col md:flex-row gap-2 md:items-center transition-transform">
@@ -50,7 +50,7 @@ const GuestMealCard = () => {
       </CardContent>
       <CardFooter className="mt-auto">
         <Button disabled={count ? false : true} className="w-full ">
-          Request Meal
+          Request
         </Button>
       </CardFooter>
     </Card>

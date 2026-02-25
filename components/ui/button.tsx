@@ -21,6 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         success:
           "bg-success hover:bg-green-500 dark:hover:bg-green-500 text-success-foreground",
+        info: "bg-info text-info-foreground dark:hover:bg-blue-500 hover:bg-blue-500",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
