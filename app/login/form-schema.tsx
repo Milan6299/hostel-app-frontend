@@ -51,6 +51,8 @@ export function BugReportForm() {
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log(data);
+
     toast("You submitted the following values:", {
       description: (
         <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
