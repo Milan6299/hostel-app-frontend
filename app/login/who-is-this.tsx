@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChefHat, ShieldUser, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 interface WhoIsUser {
 	role: string;
@@ -11,24 +10,21 @@ interface WhoIsUser {
 }
 
 const WhoIsThis = () => {
-	const path = usePathname();
-	// console.log(path);
-
 	const users: WhoIsUser[] = [
 		{
 			role: "Student",
 			icon: <User />,
-			path: "/login/student",
+			path: "/signup/student",
 		},
 		{
 			role: "Cook",
 			icon: <ChefHat />,
-			path: "/login/cook",
+			path: "/signup/cook",
 		},
 		{
 			role: "Admin",
 			icon: <ShieldUser />,
-			path: "/login/admin",
+			path: "/signup/admin",
 		},
 	];
 
