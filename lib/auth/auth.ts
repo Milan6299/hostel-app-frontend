@@ -1,11 +1,20 @@
+import { LoginSchema } from "@/app/login/login-form";
 import { api } from "../helpers";
 
-export async function getCurrentUser() {
+export async function loginUser(data: LoginSchema) {
 	try {
-		const response = api.get(`/api/authenticate/`);
+		const response = api.post("/api/login/", data);
 		return response;
 	} catch (err) {
 		console.log(err);
 	}
-	// return { role: "student" };
+}
+
+export async function getCurrentUser() {
+	try {
+		const response = api.get("/api/authenticate/");
+		return response;
+	} catch (err) {
+		console.log(err);
+	}
 }
