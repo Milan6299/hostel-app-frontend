@@ -11,7 +11,8 @@ const SignUpForm = ({ role }: { role: string }) => {
 				{
 					email: "",
 					username: "",
-					password: "",
+					password1: "",
+					password2: "",
 					role: role,
 				},
 				{
