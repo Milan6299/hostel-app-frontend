@@ -20,5 +20,5 @@ export default function CompleteProfile() {
 	useEffect(() => {
 		get_profile_data();
 	}, []);
-	return <div>{user?.user.role} Profile Form</div>;
+	return <div>Complete Profile Form</div>;
 }
