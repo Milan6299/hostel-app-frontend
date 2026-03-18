@@ -1,5 +1,5 @@
 "use server";
-import ProfileForm from "./ProfileForm";
+import FormRenderer from "./FormRenderer";
 
 export default async function CompleteProfile({
 	params,
@@ -8,5 +8,5 @@ export default async function CompleteProfile({
 }) {
 	const { role } = await params;
 
-	return <ProfileForm role={role} />;
+	return <FormRenderer role={role} />;
 }
