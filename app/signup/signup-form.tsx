@@ -27,8 +27,8 @@ const SignUpForm = ({ role }: { role: string }) => {
 			// 	alert("navigating to profile_complete page");
 			// }
 			// alert(response.status);
-		} catch (err: any) {
-			alert(err.response.data.error);
+		} catch (err: unknown) {
+			alert(err?.response.data.error);
 		}
 	};
 	useEffect(() => {
