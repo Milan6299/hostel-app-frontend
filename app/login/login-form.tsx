@@ -20,7 +20,7 @@ import { InputGroup } from "@/components/ui/input-group";
 import { loginUser } from "@/lib/auth/auth";
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
-// import { api } from "@/lib/helpers";
+import { CircleAlert } from "lucide-react";
 
 export type LoginSchema = {
 	email: string;
@@ -34,6 +34,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
 	const router = useRouter();
+	const [error, setError] = useState<boolean>(false);
 	const [visible, setVisible] = useState<boolean>(false);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -46,10 +47,8 @@ export function LoginForm() {
 	async function onSubmit(formdata: LoginSchema) {
 		console.log(formdata);
 		try {
-			// const tokens = await api.get("/api/csrf/");
-			// console.log(tokens);
 			const response = await loginUser(formdata);
-			// console.log(response?.data);
+			console.log("login", response?.data);
 			if (response) {
 				const data = response.data;
 				if (data.profile_complete === false)
@@ -59,35 +58,41 @@ export function LoginForm() {
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				const resp = err.response?.data;
+				const status = err.status;
+				console.log(resp);
 
 				// console.error(resp?.code);
 				toast(`${resp?.error}`);
-
+				if (status === 401) {
+					setError(true);
+					return;
+				}
+				if (resp?.code === "INCOMPLETE") {
+					toast(`${resp?.error}`);
+					router.push(`/complete-profile/${resp.role}/`);
+				}
 				if (resp?.code === "WAITING") {
+					toast("resp.code.msg");
 					router.push("/waiting");
 				}
 			}
 		}
 
 		// For development only
-		{
-			/*
-		toast("You submitted the following values:", {
-			description: (
-				<pre className="bg-code text-code-foreground mt-2 w-100 rounded-md p-4">
-					<code>{JSON.stringify(formdata, null, 2)}</code>
-				</pre>
-			),
-			position: "bottom-right",
-			classNames: {
-				content: "flex flex-col gap-2",
-			},
-			style: {
-				"--border-radius": "calc(var(--radius)  + 4px)",
-			} as React.CSSProperties,
-		});
-    */
-		}
+		// toast("You submitted the following values:", {
+		// 	description: (
+		// 		<pre className="bg-code text-code-foreground mt-2 w-100 rounded-md p-4">
+		// 			<code>{JSON.stringify(formdata, null, 2)}</code>
+		// 		</pre>
+		// 	),
+		// 	position: "bottom-right",
+		// 	classNames: {
+		// 		content: "flex flex-col gap-2",
+		// 	},
+		// 	style: {
+		// 		"--border-radius": "calc(var(--radius)  + 4px)",
+		// 	} as React.CSSProperties,
+		// });
 	}
 	return (
 		<Card className="w-full sm:max-w-md">
@@ -105,6 +110,11 @@ export function LoginForm() {
 			}
 			<CardContent>
 				<form id="login" onSubmit={form.handleSubmit(onSubmit)}>
+					{error && (
+						<p className="text-destructive flex gap-2 items-center pb-4">
+							<CircleAlert /> Incorrect email or password!
+						</p>
+					)}
 					<FieldGroup>
 						<Controller
 							name="email"
@@ -166,7 +176,14 @@ export function LoginForm() {
 			</CardContent>
 			<CardFooter>
 				<Field orientation="horizontal">
-					<Button type="button" variant="outline" onClick={() => form.reset()}>
+					<Button
+						type="button"
+						variant="outline"
+						onClick={() => {
+							form.reset();
+							setError(false);
+						}}
+					>
 						Reset
 					</Button>
 					<Button type="submit" form="login">
