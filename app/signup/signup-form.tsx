@@ -14,6 +14,7 @@ import {
 	CardContent,
 	CardFooter,
 	CardHeader,
+	CardTitle,
 } from "@/components/ui/card";
 import {
 	Field,
@@ -108,7 +109,9 @@ const SignUpForm = ({ role }: { role: string }) => {
 	}
 	return success ? (
 		<Card>
-			<CardHeader>Verification Message Sent!</CardHeader>
+			<CardHeader>
+				<CardTitle>Verification Message Sent!</CardTitle>
+			</CardHeader>
 		</Card>
 	) : (
 		<Card className="w-full sm:max-w-md">
