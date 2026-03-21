@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,8 +17,9 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup } from "@/components/ui/input-group";
-import { LucideEye, LucideEyeOff } from "lucide-react";
 import { loginUser } from "@/lib/auth/auth";
+import axios from "axios";
+import { Checkbox } from "@/components/ui/checkbox";
 // import { api } from "@/lib/helpers";
 
 export type LoginSchema = {
@@ -57,10 +57,21 @@ export function LoginForm() {
 				else router.push(`/${data.role}`);
 			}
 		} catch (err) {
-			alert(err);
+			if (axios.isAxiosError(err)) {
+				const resp = err.response?.data;
+
+				// console.error(resp?.code);
+				toast(`${resp?.error}`);
+
+				if (resp?.code === "WAITING") {
+					router.push("/waiting");
+				}
+			}
 		}
 
 		// For development only
+		{
+			/*
 		toast("You submitted the following values:", {
 			description: (
 				<pre className="bg-code text-code-foreground mt-2 w-100 rounded-md p-4">
@@ -75,6 +86,8 @@ export function LoginForm() {
 				"--border-radius": "calc(var(--radius)  + 4px)",
 			} as React.CSSProperties,
 		});
+    */
+		}
 	}
 	return (
 		<Card className="w-full sm:max-w-md">
@@ -129,13 +142,6 @@ export function LoginForm() {
 											autoComplete="on"
 											className="pr-14"
 										/>
-										<Button
-											onClick={() => setVisible(!visible)}
-											type="button"
-											className="bg-inherit text-foreground absolute right-0"
-										>
-											{visible ? <LucideEyeOff /> : <LucideEye />}
-										</Button>
 									</InputGroup>
 									{fieldState.invalid && (
 										<FieldError errors={[fieldState.error]} />
@@ -143,6 +149,18 @@ export function LoginForm() {
 								</Field>
 							)}
 						/>
+
+						<Field orientation={"horizontal"}>
+							<Checkbox
+								id="showpass"
+								name="showpass"
+								checked={visible}
+								onCheckedChange={() => setVisible(!visible)}
+							/>
+							<FieldLabel htmlFor="showpass">
+								{visible ? "Hide" : "Show Password"}
+							</FieldLabel>
+						</Field>
 					</FieldGroup>
 				</form>
 			</CardContent>
