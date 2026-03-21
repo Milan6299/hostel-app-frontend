@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Page(): ReactElement {
 	return (
-		<div>
+		<div className="p-4">
 			<h1>New User? Sign Up First!</h1>
 			<WhoIsThis />
 			<Separator />

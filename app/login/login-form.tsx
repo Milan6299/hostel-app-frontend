@@ -72,7 +72,7 @@ export function LoginForm() {
 					router.push(`/complete-profile/${resp.role}/`);
 				}
 				if (resp?.code === "WAITING") {
-					toast("resp.code.msg");
+					toast(`${resp.error}`);
 					router.push("/waiting");
 				}
 			}
