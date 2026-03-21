@@ -14,7 +14,9 @@ export default function Waiting(): ReactElement {
 		<div className="flex w-screen items-center justify-center p-4 h-screen">
 			<Card className="max-w-sm">
 				<CardHeader>
-					<h3>Waiting for Approval</h3>
+					<h3>
+						<strong>Waiting for Approval</strong>
+					</h3>
 				</CardHeader>
 				<CardContent>
 					<CardDescription>
@@ -27,7 +29,7 @@ export default function Waiting(): ReactElement {
 				<CardFooter className="grid gap-4">
 					<p>For further querries contact us.</p>
 					<Link href={"/contact-us"}>
-						<Button>Contact Us</Button>
+						<Button variant={"info"}>Contact Us</Button>
 					</Link>
 				</CardFooter>
 			</Card>
