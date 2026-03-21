@@ -5,7 +5,7 @@ import { SignupSchema } from "@/app/signup/signup-form";
 
 export async function loginUser(data: LoginSchema) {
 	try {
-		const response = api.post("/api/login/", data);
+		const response = await api.post("/api/login/", data);
 		console.log(response);
 		return response;
 	} catch (err) {
@@ -15,7 +15,7 @@ export async function loginUser(data: LoginSchema) {
 
 export async function signupUser(data: SignupSchema) {
 	try {
-		const response = api.post("/api/signup/", data);
+		const response = await api.post("/api/signup/", data);
 		return response;
 	} catch (err) {
 		console.log(err);
@@ -24,7 +24,7 @@ export async function signupUser(data: SignupSchema) {
 
 export async function completeProfile(data: StudentProfileSchema) {
 	try {
-		const response = api.post("/api/complete_profile/", data);
+		const response = await api.post("/api/complete_profile/", data);
 		return response;
 	} catch (err) {
 		console.log(err.response.data);
@@ -33,7 +33,7 @@ export async function completeProfile(data: StudentProfileSchema) {
 
 export async function getCurrentUser() {
 	try {
-		const response = api.get("/api/authenticate/");
+		const response = await api.get("/api/authenticate/");
 		console.log("response", response.data);
 		return response;
 	} catch (err) {
