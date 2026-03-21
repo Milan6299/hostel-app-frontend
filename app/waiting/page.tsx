@@ -28,9 +28,14 @@ export default function Waiting(): ReactElement {
 				</CardContent>
 				<CardFooter className="grid gap-4">
 					<p>For further querries contact us.</p>
-					<Link href={"/contact-us"}>
-						<Button variant={"info"}>Contact Us</Button>
-					</Link>
+					<div className="flex gap-4">
+						<Link href={"/contact-us"}>
+							<Button variant={"info"}>Contact Us</Button>
+						</Link>
+						<Link href={"/login"}>
+							<Button variant={"default"}>Login</Button>
+						</Link>
+					</div>
 				</CardFooter>
 			</Card>
 		</div>
