@@ -29,6 +29,9 @@ import { Input } from "@/components/ui/input";
 import { completeProfile } from "@/lib/auth/auth";
 import SelectionMenu from "@/components/selection-menu";
 import axios from "axios";
+import Image from "next/image";
+import { api } from "@/lib/helpers";
+import { useEffect } from "react";
 
 const formSchema = z.object({
 	first_name: z.string().min(1),
@@ -62,6 +65,24 @@ export function StudentProfileForm() {
 		},
 	});
 
+	useEffect(() => {
+		const check = async () =>
+			await api
+				.get("/api/authenticate")
+				.then((resp) => {
+					console.log(resp.data);
+					if (resp.data.profile_complete === true) {
+						toast("Profile Completed Already!");
+						router.push("/");
+					}
+				})
+				.catch(() => {
+					toast("Error Occured!");
+					router.push("/login");
+				});
+		check();
+	}, []);
+
 	async function onSubmit(formdata: StudentProfileSchema) {
 		try {
 			const response = await completeProfile(formdata);
@@ -87,192 +108,214 @@ export function StudentProfileForm() {
 	}
 
 	return (
-		<Card className="w-full sm:min-w-md md:max-w-7xl">
-			<CardHeader>
-				<CardTitle>Complete Student Profile</CardTitle>
-				<CardDescription>Please fill in your hostel details</CardDescription>
-			</CardHeader>
+		<div className="w-full flex flex-col items-center justify-center mt-10 gap-4">
+			<div className="flex items-center gap-4 justify-center">
+				<div className="h-10 w-10 flex overflow-hidden relative">
+					<Image
+						src={"/fm-logo.png"}
+						className="object-cover"
+						fill
+						alt="fmu-hostel-logo"
+					/>
+				</div>
+				<h2 className="text-2xl flex">FMU Hostel</h2>
+			</div>
 
-			<CardContent>
-				<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
-					<FieldSet className="grid md:grid-cols-2">
-						<FieldGroup>
-							<FieldTitle className="">Personal Info</FieldTitle>
-							{/* First Name */}
-							<Controller
-								name="first_name"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>First Name</FieldLabel>
-										<Input {...field} placeholder="First Name" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+			<Card className="w-full mx-auto sm:min-w-md sm:max-w-xl">
+				<CardHeader>
+					<CardTitle>Student Profile</CardTitle>
+					<CardDescription>Please fill in your hostel details</CardDescription>
+				</CardHeader>
+
+				<CardContent>
+					<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
+						<FieldSet className="grid ">
+							<FieldGroup>
+								{/* 
+							  <FieldTitle className="">Personal Info</FieldTitle>
+                First Name */}
+								<FieldGroup className="grid sm:grid-cols-2">
+									<Controller
+										name="first_name"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>First Name</FieldLabel>
+												<Input {...field} placeholder="First Name" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
+									/>
 
-							{/* Last Name */}
-							<Controller
-								name="last_name"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Last Name</FieldLabel>
-										<Input {...field} placeholder="Last Name" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									{/* Last Name */}
+									<Controller
+										name="last_name"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Last Name</FieldLabel>
+												<Input {...field} placeholder="Last Name" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
-
-							{/* Roll Number */}
-							<Controller
-								name="roll_no"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Roll Number</FieldLabel>
-										<Input {...field} placeholder="Roll Number" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									/>
+								</FieldGroup>
+								<FieldGroup className="grid grid-cols-2">
+									{/* Roll Number */}
+									<Controller
+										name="roll_no"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Roll Number</FieldLabel>
+												<Input {...field} placeholder="Roll Number" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
+									/>
 
-							{/* Department */}
-							<Controller
-								name="department"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Department</FieldLabel>
-										<Input {...field} placeholder="Department" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									{/* Department */}
+									<Controller
+										name="department"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Department</FieldLabel>
+												<Input {...field} placeholder="Department" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
-
-							{/* Room */}
-							<Controller
-								name="room_no"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Room Number</FieldLabel>
-										<Input {...field} placeholder="Room Number" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									/>
+								</FieldGroup>
+								{/* Phone */}
+								<Controller
+									name="phone"
+									control={form.control}
+									render={({ field, fieldState }) => (
+										<Field data-invalid={fieldState.invalid}>
+											<FieldLabel>Phone</FieldLabel>
+											<Input {...field} placeholder="Phone Number" />
+											{fieldState.invalid && (
+												<FieldError errors={[fieldState.error]} />
+											)}
+										</Field>
+									)}
+								/>
+							</FieldGroup>
+							<FieldGroup>
+								<FieldGroup className="grid sm:grid-cols-4">
+									{/* Year */}
+									<Controller
+										name="year"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Year</FieldLabel>
+												<Input
+													type="number"
+													{...field}
+													onChange={(e) =>
+														field.onChange(e.target.valueAsNumber)
+													}
+												/>
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
-
-							{/* Phone */}
-							<Controller
-								name="phone"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Phone</FieldLabel>
-										<Input {...field} placeholder="Phone Number" />
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									/>
+									{/* Room */}
+									<Controller
+										name="room_no"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Room Number</FieldLabel>
+												<Input {...field} placeholder="Room Number" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
-						</FieldGroup>
-						<FieldGroup>
-							{/* Year */}
-							<Controller
-								name="year"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Year</FieldLabel>
-										<Input
-											type="number"
-											{...field}
-											onChange={(e) => field.onChange(e.target.valueAsNumber)}
-										/>
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									/>
+
+									{/* Hostel Type */}
+									<Controller
+										name="hostel_type"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Hostel Type</FieldLabel>
+
+												<SelectionMenu
+													placeholder="Select hostel type"
+													items={[
+														{ value: "boys", label: "Boys Hostel" },
+														{ value: "girls", label: "Girls Hostel" },
+													]}
+													value={field.value}
+													onChange={field.onChange}
+												/>
+
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
+									/>
 
-							{/* Hostel Type */}
-							<Controller
-								name="hostel_type"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Hostel Type</FieldLabel>
-
-										<SelectionMenu
-											placeholder="Select hostel type"
-											items={[
-												{ value: "boys", label: "Boys Hostel" },
-												{ value: "girls", label: "Girls Hostel" },
-											]}
-											value={field.value}
-											onChange={field.onChange}
-										/>
-
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
+									{/* Hostel Block */}
+									<Controller
+										name="hostel_block"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Hostel Block</FieldLabel>
+												<Input
+													type="number"
+													{...field}
+													onChange={(e) =>
+														field.onChange(Number(e.target.value))
+													}
+												/>
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
 										)}
-									</Field>
-								)}
-							/>
+									/>
+								</FieldGroup>
+							</FieldGroup>
+						</FieldSet>
+					</form>
+				</CardContent>
 
-							{/* Hostel Block */}
-							<Controller
-								name="hostel_block"
-								control={form.control}
-								render={({ field, fieldState }) => (
-									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>Hostel Block</FieldLabel>
-										<Input
-											type="number"
-											{...field}
-											onChange={(e) => field.onChange(Number(e.target.value))}
-										/>
-										{fieldState.invalid && (
-											<FieldError errors={[fieldState.error]} />
-										)}
-									</Field>
-								)}
-							/>
-						</FieldGroup>
+				<CardFooter>
+					<FieldSet>
+						<Field orientation="horizontal">
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => form.reset()}
+							>
+								Reset
+							</Button>
+
+							<Button type="submit" form="student-profile">
+								Submit
+							</Button>
+						</Field>
 					</FieldSet>
-				</form>
-			</CardContent>
-
-			<CardFooter>
-				<FieldSet>
-					<Field orientation="horizontal">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => form.reset()}
-						>
-							Reset
-						</Button>
-
-						<Button type="submit" form="student-profile">
-							Submit
-						</Button>
-					</Field>
-				</FieldSet>
-			</CardFooter>
-		</Card>
+				</CardFooter>
+			</Card>
+		</div>
 	);
 }
