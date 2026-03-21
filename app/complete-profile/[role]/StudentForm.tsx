@@ -21,6 +21,8 @@ import {
 	FieldError,
 	FieldGroup,
 	FieldLabel,
+	FieldSet,
+	FieldTitle,
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
@@ -65,31 +67,27 @@ export function StudentProfileForm() {
 			const response = await completeProfile(formdata);
 
 			if (response) {
-				router.push("/student");
+				router.push("/waiting");
 			}
 		} catch (err: unknown) {
 			if (axios.isAxiosError(err)) {
 				const resp = err.response?.data;
 
-				console.error(resp?.code);
+				console.log(resp);
 
-				if (resp?.code === "ALREADY_EXISTS") {
+				if (resp?.code === "EXISTS") {
+					toast(`${resp.error}`);
 					router.push("/login");
+				}
+				if (resp?.code === "WAITING") {
+					router.push("/waiting");
 				}
 			}
 		}
-		toast("Submission Successful!", {
-			// description: (
-			// 	<pre className="bg-code text-code-foreground mt-2 w-100 rounded-md p-4">
-			// 		<code>{JSON.stringify(formdata, null, 2)}</code>
-			// 	</pre>
-			// ),
-			position: "bottom-right",
-		});
 	}
 
 	return (
-		<Card className="w-full sm:min-w-md sm:max-w-lg">
+		<Card className="w-full sm:min-w-md md:max-w-7xl">
 			<CardHeader>
 				<CardTitle>Complete Student Profile</CardTitle>
 				<CardDescription>Please fill in your hostel details</CardDescription>
@@ -97,173 +95,183 @@ export function StudentProfileForm() {
 
 			<CardContent>
 				<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
-					<FieldGroup>
-						{/* First Name */}
-						<Controller
-							name="first_name"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>First Name</FieldLabel>
-									<Input {...field} placeholder="First Name" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+					<FieldSet className="grid md:grid-cols-2">
+						<FieldGroup>
+							<FieldTitle className="">Personal Info</FieldTitle>
+							{/* First Name */}
+							<Controller
+								name="first_name"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>First Name</FieldLabel>
+										<Input {...field} placeholder="First Name" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Last Name */}
-						<Controller
-							name="last_name"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Last Name</FieldLabel>
-									<Input {...field} placeholder="Last Name" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Last Name */}
+							<Controller
+								name="last_name"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Last Name</FieldLabel>
+										<Input {...field} placeholder="Last Name" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Roll Number */}
-						<Controller
-							name="roll_no"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Roll Number</FieldLabel>
-									<Input {...field} placeholder="Roll Number" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Roll Number */}
+							<Controller
+								name="roll_no"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Roll Number</FieldLabel>
+										<Input {...field} placeholder="Roll Number" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Department */}
-						<Controller
-							name="department"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Department</FieldLabel>
-									<Input {...field} placeholder="Department" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Department */}
+							<Controller
+								name="department"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Department</FieldLabel>
+										<Input {...field} placeholder="Department" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Room */}
-						<Controller
-							name="room_no"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Room Number</FieldLabel>
-									<Input {...field} placeholder="Room Number" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Room */}
+							<Controller
+								name="room_no"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Room Number</FieldLabel>
+										<Input {...field} placeholder="Room Number" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Phone */}
-						<Controller
-							name="phone"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Phone</FieldLabel>
-									<Input {...field} placeholder="Phone Number" />
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Phone */}
+							<Controller
+								name="phone"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Phone</FieldLabel>
+										<Input {...field} placeholder="Phone Number" />
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
+						</FieldGroup>
+						<FieldGroup>
+							{/* Year */}
+							<Controller
+								name="year"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Year</FieldLabel>
+										<Input
+											type="number"
+											{...field}
+											onChange={(e) => field.onChange(e.target.valueAsNumber)}
+										/>
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-						{/* Year */}
-						<Controller
-							name="year"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Year</FieldLabel>
-									<Input
-										type="number"
-										{...field}
-										onChange={(e) => field.onChange(e.target.valueAsNumber)}
-									/>
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
+							{/* Hostel Type */}
+							<Controller
+								name="hostel_type"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Hostel Type</FieldLabel>
 
-						{/* Hostel Type */}
-						<Controller
-							name="hostel_type"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Hostel Type</FieldLabel>
+										<SelectionMenu
+											placeholder="Select hostel type"
+											items={[
+												{ value: "boys", label: "Boys Hostel" },
+												{ value: "girls", label: "Girls Hostel" },
+											]}
+											value={field.value}
+											onChange={field.onChange}
+										/>
 
-									<SelectionMenu
-										placeholder="Select hostel type"
-										items={[
-											{ value: "boys", label: "Boys Hostel" },
-											{ value: "girls", label: "Girls Hostel" },
-										]}
-										value={field.value}
-										onChange={field.onChange}
-									/>
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
 
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
-
-						{/* Hostel Block */}
-						<Controller
-							name="hostel_block"
-							control={form.control}
-							render={({ field, fieldState }) => (
-								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>Hostel Block</FieldLabel>
-									<Input
-										type="number"
-										{...field}
-										onChange={(e) => field.onChange(Number(e.target.value))}
-									/>
-									{fieldState.invalid && (
-										<FieldError errors={[fieldState.error]} />
-									)}
-								</Field>
-							)}
-						/>
-					</FieldGroup>
+							{/* Hostel Block */}
+							<Controller
+								name="hostel_block"
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Hostel Block</FieldLabel>
+										<Input
+											type="number"
+											{...field}
+											onChange={(e) => field.onChange(Number(e.target.value))}
+										/>
+										{fieldState.invalid && (
+											<FieldError errors={[fieldState.error]} />
+										)}
+									</Field>
+								)}
+							/>
+						</FieldGroup>
+					</FieldSet>
 				</form>
 			</CardContent>
 
 			<CardFooter>
-				<Field orientation="horizontal">
-					<Button type="button" variant="outline" onClick={() => form.reset()}>
-						Reset
-					</Button>
+				<FieldSet>
+					<Field orientation="horizontal">
+						<Button
+							type="button"
+							variant="outline"
+							onClick={() => form.reset()}
+						>
+							Reset
+						</Button>
 
-					<Button type="submit" form="student-profile">
-						Submit
-					</Button>
-				</Field>
+						<Button type="submit" form="student-profile">
+							Submit
+						</Button>
+					</Field>
+				</FieldSet>
 			</CardFooter>
 		</Card>
 	);
