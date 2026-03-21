@@ -8,8 +8,9 @@ export default async function SignUpPage({
 	const { role } = await params;
 	return (
 		<div>
-			{/*for development*/}
+			{/*for development
 			<h1>Sign Up Form for {role}</h1>
+      */}
 			{children}
 		</div>
 	);

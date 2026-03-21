@@ -6,5 +6,9 @@ export default async function Page({
 	params: Promise<{ role: string }>;
 }) {
 	const { role } = await params;
-	return <SignUpForm role={role} />;
+	return (
+		<div className="flex w-screen h-screen items-center justify-center">
+			<SignUpForm role={role} />
+		</div>
+	);
 }
