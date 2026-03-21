@@ -1,21 +1,24 @@
-import { api } from "@/lib/helpers";
+import { getCurrentUserServer } from "@/lib/auth/auth-server";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-	// const user = getCurrentUser();
-	// const user = { role: null };
-	try {
-		const resp = await api.get("/api/authenticate/");
-		const user = resp.data;
-		console.log(resp);
+	const user = await getCurrentUserServer();
 
-		if (!user.role) redirect("/login");
-
-		if (user.role === "student") redirect("/student");
-		if (user.role === "cook") redirect("/cook");
-		if (user.role === "admin") redirect("/admin");
-	} catch (err) {
-		console.error(err);
+	// 1. If no user, go to login
+	if (!user) {
 		redirect("/login");
 	}
+
+	// 2. If user exists but profile isn't done
+	if (!user.profile_complete) {
+		redirect(`/complete-profile/${user.role}`);
+	}
+
+	// 3. Role-based routing
+	if (user.role === "student") redirect("/student");
+	if (user.role === "cook") redirect("/cook");
+	if (user.role === "admin") redirect("/admin");
+
+	// Fallback
+	return null;
 }
