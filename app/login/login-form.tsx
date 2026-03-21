@@ -9,14 +9,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
 	Field,
 	FieldError,
@@ -85,14 +78,18 @@ export function LoginForm() {
 	}
 	return (
 		<Card className="w-full sm:max-w-md">
-			<CardHeader>
-				<CardTitle>Login Form</CardTitle>
-				<CardDescription>
-					{
-						// Help us improve by reporting bugs you encounter.
-					}
-				</CardDescription>
-			</CardHeader>
+			{
+				// <CardHeader>
+				// 	{
+				// 		<CardTitle>Login Form</CardTitle>
+				// 	}
+				// 	<CardDescription>
+				// 		{
+				// 			// Help us improve by reporting bugs you encounter.
+				// 		}
+				// 	</CardDescription>
+				// </CardHeader>
+			}
 			<CardContent>
 				<form id="login" onSubmit={form.handleSubmit(onSubmit)}>
 					<FieldGroup>
