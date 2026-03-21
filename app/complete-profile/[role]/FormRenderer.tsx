@@ -1,8 +1,6 @@
 "use client";
-import { api } from "@/lib/helpers";
 import { type ReactElement } from "react";
 
-import { useEffect } from "react";
 import { StudentProfileForm } from "./StudentForm";
 
 export default function FormRenderer({ role }: { role: string }): ReactElement {
