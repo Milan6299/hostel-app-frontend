@@ -29,24 +29,22 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
-import { api } from "@/lib/helpers";
 import { toast } from "sonner";
+import { logoutUser } from "@/lib/auth/auth";
 type Role = "student" | "cook" | "admin";
 
 export function AppSidebar({ role }: { role: Role }) {
 	const pathname = usePathname();
 	const menuItems = sidebarConfig[role];
 	const router = useRouter();
-
-	function handleLogout() {
-		api
-			.post("/api/logout/")
+	const handleLogout = async () => {
+		await logoutUser()
 			.then((resp) => {
 				toast(`${resp.data.message}`);
 				router.push("/login");
 			})
 			.catch(() => router.push("/login"));
-	}
+	};
 
 	return (
 		<Sidebar collapsible="offcanvas">
@@ -121,7 +119,7 @@ export function AppSidebar({ role }: { role: Role }) {
 												<Button>Cancel</Button>
 											</DialogClose>
 											<Button
-												onClick={handleLogout}
+												onClick={() => handleLogout()}
 												variant={"destructive"}
 												type="submit"
 											>

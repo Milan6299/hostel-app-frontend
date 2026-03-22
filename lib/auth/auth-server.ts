@@ -20,6 +20,6 @@ export async function getCurrentUserServer() {
 		);
 		return response.data;
 	} catch (error) {
-		return null; // This will trigger your redirect to login
+		return null; // This will trigger redirect to login
 	}
 }
