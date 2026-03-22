@@ -36,7 +36,7 @@ const formSchema = z.object({
 	last_name: z.string().min(1),
 	roll_no: z.string().min(3),
 	department: z.string().min(2),
-	room_no: z.string().min(1),
+	room_no: z.number().min(1),
 	phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
 	year: z.number().min(1).max(5),
 	hostel_block: z.number().min(1),
@@ -56,7 +56,7 @@ export function StudentProfileForm() {
 			last_name: "",
 			roll_no: "",
 			department: "",
-			room_no: "",
+			room_no: 1,
 			phone: "",
 			year: 1,
 			hostel_type: "boys",
@@ -244,7 +244,14 @@ export function StudentProfileForm() {
 										render={({ field, fieldState }) => (
 											<Field data-invalid={fieldState.invalid}>
 												<FieldLabel>Room Number</FieldLabel>
-												<Input {...field} placeholder="Room Number" />
+												<Input
+													type="number"
+													{...field}
+													onChange={(e) =>
+														field.onChange(Number(e.target.value))
+													}
+													placeholder="Room Number"
+												/>
 												{fieldState.invalid && (
 													<FieldError errors={[fieldState.error]} />
 												)}
