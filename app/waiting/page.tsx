@@ -6,6 +6,7 @@ import {
 	CardFooter,
 	CardHeader,
 } from "@/components/ui/card";
+import { MailSearch } from "lucide-react";
 import Link from "next/link";
 import { type ReactElement } from "react";
 
@@ -15,7 +16,9 @@ export default function Waiting(): ReactElement {
 			<Card className="max-w-sm">
 				<CardHeader>
 					<h3>
-						<strong>Waiting for Approval</strong>
+						<strong className="flex gap-2 text-xl items-center">
+							<MailSearch className="text-warning" /> Waiting for Approval
+						</strong>
 					</h3>
 				</CardHeader>
 				<CardContent>
