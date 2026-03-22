@@ -8,8 +8,9 @@ export async function loginUser(data: LoginSchema) {
 		const response = await api.post("/api/login/", data);
 		console.log(response);
 		return response;
-	} catch (err) {
-		console.log(err);
+	} catch (err: unknown) {
+		console.log(err.response.data);
+		throw err;
 	}
 }
 
@@ -19,6 +20,7 @@ export async function signupUser(data: SignupSchema) {
 		return response;
 	} catch (err) {
 		console.log(err);
+		throw err;
 	}
 }
 
@@ -28,6 +30,7 @@ export async function completeProfile(data: StudentProfileSchema) {
 		return response;
 	} catch (err) {
 		console.log(err.response.data);
+		throw err;
 	}
 }
 
@@ -38,5 +41,6 @@ export async function getCurrentUser() {
 		return response;
 	} catch (err) {
 		console.log(err);
+		throw err;
 	}
 }
