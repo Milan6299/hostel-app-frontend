@@ -48,9 +48,9 @@ export function LoginForm() {
 		console.log(formdata);
 		try {
 			const response = await loginUser(formdata);
-			console.log("login", response?.data);
 			if (response) {
 				const data = response.data;
+				console.log(response.data);
 				if (data.profile_complete === false)
 					router.push(`/complete-profile/${data.role}`);
 				else router.push(`/${data.role}`);
@@ -59,21 +59,25 @@ export function LoginForm() {
 			if (axios.isAxiosError(err)) {
 				const resp = err.response?.data;
 				const status = err.status;
-				console.log(resp);
-
-				// console.error(resp?.code);
-				toast(`${resp?.error}`);
+				if (status === 403) {
+					toast(`${resp?.error}`);
+					setError(true);
+					router.push("/complete-profile/student");
+				}
 				if (status === 401) {
+					toast(`${resp?.error}`);
 					setError(true);
 					return;
 				}
 				if (resp?.code === "INCOMPLETE") {
 					toast(`${resp?.error}`);
 					router.push(`/complete-profile/${resp.role}/`);
+					return;
 				}
 				if (resp?.code === "WAITING") {
 					toast(`${resp.error}`);
 					router.push("/waiting");
+					return;
 				}
 			}
 		}
