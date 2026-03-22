@@ -1,3 +1,4 @@
+import { StudentProfileSchema } from "@/app/(student)/student/profile/page";
 import { api } from "@/lib/helpers";
 
 export async function getProfile() {
@@ -6,6 +7,17 @@ export async function getProfile() {
 		return resp.data;
 	} catch (err) {
 		console.error(err);
+		throw err;
+	}
+}
+
+export async function updateProfile(data: StudentProfileSchema) {
+	try {
+		const resp = await api.patch("/api/update_profile/", data);
+		console.log(resp.data);
+		return resp.data;
+	} catch (err) {
+		console.log(err.resp.data);
 		throw err;
 	}
 }

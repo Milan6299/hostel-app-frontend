@@ -1,6 +1,6 @@
 import { LoginSchema } from "@/app/login/login-form";
 import { api } from "../helpers";
-import { StudentProfileSchema } from "@/app/complete-profile/[role]/StudentForm";
+import { CompleteStudentProfileSchema } from "@/app/complete-profile/[role]/StudentForm";
 import { SignupSchema } from "@/app/signup/signup-form";
 
 type ApiError = {
@@ -51,7 +51,7 @@ export async function logoutUser() {
 	}
 }
 // Complete Profile
-export async function completeProfile(data: StudentProfileSchema) {
+export async function completeProfile(data: CompleteStudentProfileSchema) {
 	try {
 		const response = await api.post("/api/complete_profile/", data);
 		return response.data;
@@ -63,7 +63,7 @@ export async function completeProfile(data: StudentProfileSchema) {
 // Authenticate
 export async function checkAuth() {
 	try {
-		const response = await api.get("/api/authenticate/");
+		const response = await api.get("/api/authenticate");
 		return response.data;
 	} catch (err: any) {
 		throw handleApiError(err);
