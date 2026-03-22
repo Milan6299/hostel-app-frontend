@@ -22,15 +22,12 @@ import {
 	FieldGroup,
 	FieldLabel,
 	FieldSet,
-	FieldTitle,
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
 import { checkAuth, completeProfile } from "@/lib/auth/auth";
 import SelectionMenu from "@/components/selection-menu";
-import axios from "axios";
 import Image from "next/image";
-import { api } from "@/lib/helpers";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 
@@ -46,13 +43,13 @@ const formSchema = z.object({
 	hostel_type: z.enum(["boys", "girls"]),
 });
 
-export type StudentProfileSchema = z.infer<typeof formSchema>;
+export type CompleteStudentProfileSchema = z.infer<typeof formSchema>;
 
 export function StudentProfileForm() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
-	const form = useForm<StudentProfileSchema>({
+	const form = useForm<CompleteStudentProfileSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			first_name: "",
@@ -81,7 +78,7 @@ export function StudentProfileForm() {
 			});
 	}, []);
 
-	async function onSubmit(formdata: StudentProfileSchema) {
+	async function onSubmit(formdata: CompleteStudentProfileSchema) {
 		setIsLoading(true);
 		try {
 			const response = await completeProfile(formdata);
@@ -133,7 +130,10 @@ export function StudentProfileForm() {
 				</CardHeader>
 
 				<CardContent>
-					<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
+					<form
+						id="complete-student-profile"
+						onSubmit={form.handleSubmit(onSubmit)}
+					>
 						<FieldSet disabled={isLoading} className="grid ">
 							<FieldGroup>
 								{/* 
@@ -314,7 +314,7 @@ export function StudentProfileForm() {
 								Reset
 							</Button>
 
-							<Button type="submit" form="student-profile">
+							<Button type="submit" form="complete-student-profile">
 								Submit
 							</Button>
 						</Field>
