@@ -22,6 +22,7 @@ import { updateProfile } from "@/lib/api/profile";
 import { getProfile } from "@/lib/auth/auth";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { Button } from "@/components/ui/button";
+import { SkeletonForm } from "@/components/skeleton-form";
 
 export type StudentProfileSchema = z.infer<typeof formSchema>;
 
@@ -124,9 +125,11 @@ const StudentProfile = () => {
 		}
 	}
 
+	if (proData === null) {
+		return <SkeletonForm />;
+	}
 	return (
 		<div>
-			<LoadingSpinner isLoading={isLoading} />
 			<div className="w-full grid gap-4 sm:gap-8 mx-auto ">
 				<div>
 					<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>

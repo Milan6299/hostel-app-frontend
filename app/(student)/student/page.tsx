@@ -7,29 +7,31 @@ import TodayMealCard from "@/components/today-meal-card";
 import WeeklyMenuCard from "@/components/weekly-menu-card";
 
 const StudentHome = () => {
-  const date = new Date();
-  // console.log(date.getHours);
+	const date = new Date();
+	// console.log(date.getHours);
 
-  return (
-    <div className="">
-      <h1 className="mb-4">
-        Good {date.getHours() > 17 ? "Evening" : "Morning"}, User
-      </h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <div className="grid grid-cols-2 md:grid-cols-1">
-          <TodayMealCard />
-          <GuestMealCard />
-        </div>
-        <div className="lg:col-span-2">
-          <ExpenseCard />
-        </div>
-        <NoticesCard />
-        <WeeklyMenuCard />
-        <NutritionInfoCard />
-        <ProfileMiniCard />
-      </div>
-    </div>
-  );
+	return (
+		<div className="">
+			<h1 className="mb-4">
+				Good {date.getHours() > 17 ? "Evening" : "Morning"}, User
+			</h1>
+			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div className="grid gap-4 md:grid-cols-1">
+					<TodayMealCard />
+					<GuestMealCard />
+					<WeeklyMenuCard />
+				</div>
+				<div className="grid gap-4">
+					<NoticesCard />
+					<ExpenseCard />
+				</div>
+				<div className="grid gap-4">
+					<NutritionInfoCard />
+					<ProfileMiniCard />
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default StudentHome;
