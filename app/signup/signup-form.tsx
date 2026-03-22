@@ -1,8 +1,6 @@
 "use client";
 
-import { api } from "@/lib/helpers";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,11 +30,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { signupUser } from "@/lib/auth/auth";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 export type SignupSchema = {
 	email: string;
 	username?: string;
 	password1: string;
 	password2: string;
+	role?: string;
 };
 const SignUpForm = ({ role }: { role: string }) => {
 	const [visible, setVisible] = useState<boolean>(false);
@@ -50,36 +51,30 @@ const SignUpForm = ({ role }: { role: string }) => {
 
 	const reqSignup = async (formData: SignupSchema) => {
 		try {
-			const response = await api.post(
-				"/api/signup/",
-				{ ...formData, username: formData.email, role: role },
-				{
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded",
-					},
-				},
-			);
+			const response = await signupUser({
+				...formData,
+				username: formData.email,
+				role: role,
+			});
+
 			console.log("response: ", response);
-			// alert("Check your mail for verification message.");
+
 			setEmail(formData.email);
 			setSuccess(true);
+
 			toast(
 				"Submission Successful! Check your gmail for verification message!",
 			);
-		} catch (err: unknown) {
-			if (axios.isAxiosError(err)) {
-				const resp = err.response?.data;
-				const status = err.status;
+		} catch (err: any) {
+			const { status, code, error } = err || {};
 
-				// console.error(resp?.code);
-				toast(`${resp?.error}`);
-				if (status === 401) {
-					return;
-				}
+			toast(error || "Something went wrong");
 
-				if (resp?.code === "WAITING") {
-					router.push("/waiting");
-				}
+			if (status === 401) return;
+
+			if (code === "WAITING") {
+				router.push("/waiting");
+				return;
 			}
 		} finally {
 			setIsLoading(false);
@@ -127,6 +122,7 @@ const SignUpForm = ({ role }: { role: string }) => {
 				</div>
 				<h2 className="text-2xl flex">FMU Hostel</h2>
 			</div>
+			<LoadingSpinner isLoading={isLoading} />
 			{success ? (
 				<Card className="mx-auto max-w-sm">
 					<CardHeader>
@@ -177,29 +173,6 @@ const SignUpForm = ({ role }: { role: string }) => {
 											</Field>
 										)}
 									/>
-
-									{
-										//
-										// <Controller
-										// 	name="username"
-										// 	control={form.control}
-										// 	render={({ field, fieldState }) => (
-										// 		<Field data-invalid={fieldState.invalid}>
-										// 			<FieldLabel htmlFor="username">Username</FieldLabel>
-										// 			<Input
-										// 				{...field}
-										// 				id="username"
-										// 				aria-invalid={fieldState.invalid}
-										// 				placeholder="Username"
-										// 				autoComplete="on"
-										// 			/>
-										// 			{fieldState.invalid && (
-										// 				<FieldError errors={[fieldState.error]} />
-										// 			)}
-										// 		</Field>
-										// 	)}
-										// />
-									}
 
 									<Controller
 										name="password1"

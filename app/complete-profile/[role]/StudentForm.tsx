@@ -26,12 +26,13 @@ import {
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
-import { completeProfile } from "@/lib/auth/auth";
+import { checkAuth, completeProfile } from "@/lib/auth/auth";
 import SelectionMenu from "@/components/selection-menu";
 import axios from "axios";
 import Image from "next/image";
 import { api } from "@/lib/helpers";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "@/components/ui/loading-spinner";
 
 const formSchema = z.object({
 	first_name: z.string().min(1),
@@ -48,6 +49,7 @@ const formSchema = z.object({
 export type StudentProfileSchema = z.infer<typeof formSchema>;
 
 export function StudentProfileForm() {
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
 	const form = useForm<StudentProfileSchema>({
@@ -64,46 +66,49 @@ export function StudentProfileForm() {
 			hostel_block: 1,
 		},
 	});
-
 	useEffect(() => {
-		const check = async () =>
-			await api
-				.get("/api/authenticate")
-				.then((resp) => {
-					console.log(resp.data);
-					if (resp.data.profile_complete === true) {
-						toast("Profile Completed Already!");
-						router.push("/");
-					}
-				})
-				.catch(() => {
-					toast("Error Occured!");
-					router.push("/login");
-				});
-		check();
+		checkAuth()
+			.then((resp) => {
+				console.log(resp);
+				if (resp.profile_complete === true) {
+					toast("Profile Completed Already!");
+					router.push("/");
+				}
+			})
+			.catch(() => {
+				toast("Error Occured! Try logging in again!");
+				router.push("/login");
+			});
 	}, []);
 
 	async function onSubmit(formdata: StudentProfileSchema) {
+		setIsLoading(true);
 		try {
 			const response = await completeProfile(formdata);
 
 			if (response) {
 				router.push("/waiting");
 			}
-		} catch (err: unknown) {
-			if (axios.isAxiosError(err)) {
-				const resp = err.response?.data;
+		} catch (err: any) {
+			const { code, error } = err || {};
 
-				console.log(resp);
+			console.log(err);
 
-				if (resp?.code === "EXISTS") {
-					toast(`${resp.error}`);
-					router.push("/login");
-				}
-				if (resp?.code === "WAITING") {
-					router.push("/waiting");
-				}
+			if (code === "EXISTS") {
+				toast(error);
+				router.push("/login");
+				return;
 			}
+
+			if (code === "WAITING") {
+				router.push("/waiting");
+				return;
+			}
+
+			// fallback
+			toast(error || "Something went wrong");
+		} finally {
+			setIsLoading(false);
 		}
 	}
 
@@ -120,7 +125,7 @@ export function StudentProfileForm() {
 				</div>
 				<h2 className="text-2xl flex">FMU Hostel</h2>
 			</div>
-
+			<LoadingSpinner isLoading={isLoading} />
 			<Card className="w-full mx-auto sm:min-w-md sm:max-w-xl">
 				<CardHeader>
 					<CardTitle>Student Profile</CardTitle>
@@ -129,7 +134,7 @@ export function StudentProfileForm() {
 
 				<CardContent>
 					<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
-						<FieldSet className="grid ">
+						<FieldSet disabled={isLoading} className="grid ">
 							<FieldGroup>
 								{/* 
 							  <FieldTitle className="">Personal Info</FieldTitle>

@@ -5,9 +5,11 @@ import { User } from "lucide-react";
 
 const LoginPage = () => {
 	return (
-		<section className="w-full flex items-center md:h-screen justify-center">
+		<section className="w-full flex items-center min-h-screen justify-center">
 			<div className="min-w-full sm:min-w-md max-w-7xl mt-10 grid gap-4 px-4">
-				<h1 className="text-center text-3xl"> FMU Mess Portal </h1>
+				{
+					//<h1 className="text-center text-3xl"> FMU Mess Portal </h1>
+				}
 				<LoginForm />
 				<Separator />
 				<div className="flex justify-center gap-2">
