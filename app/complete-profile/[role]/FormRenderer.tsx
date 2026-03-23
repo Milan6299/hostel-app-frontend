@@ -16,6 +16,7 @@ export default function FormRenderer({ role }: { role: string }): ReactElement {
 	];
 
 	const currentForm = forms.filter((f) => f.role === role);
+	console.log(currentForm);
 
 	// async function get_profile_data() {
 	// 	const response = await api

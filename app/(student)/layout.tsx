@@ -61,7 +61,7 @@ function ProfileDropdown({ role }: { role: string }) {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuGroup>
-					<DropdownMenuItem onClick={() => router.push(`${role}/profile`)}>
+					<DropdownMenuItem onClick={() => router.push(`/${role}/profile`)}>
 						<User />
 						Profile
 					</DropdownMenuItem>

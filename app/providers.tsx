@@ -2,6 +2,7 @@
 import { type ReactElement } from "react";
 import { useEffect } from "react";
 import { api } from "@/lib/helpers";
+import { authUrl } from "@/lib/auth/auth";
 
 export default function CSRFProvider({
 	children,
@@ -11,7 +12,7 @@ export default function CSRFProvider({
 	useEffect(() => {
 		const init = async () => {
 			try {
-				await api.get("/api/csrf/");
+				await api.get(`${authUrl}csrf/`);
 			} catch (err) {
 				console.error("CSRF init failed", err);
 				alert("CSRF initialization failed!");

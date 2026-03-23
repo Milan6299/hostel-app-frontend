@@ -8,7 +8,7 @@ export async function getCurrentUserServer() {
 
 	try {
 		const response = await axios.get(
-			"http://localhost:8000/api/authenticate/",
+			"http://localhost:8000/api/accounts/authenticate/",
 			{
 				headers: {
 					// Pass the cookies manually to Django
