@@ -18,17 +18,6 @@ export default function FormRenderer({ role }: { role: string }): ReactElement {
 	const currentForm = forms.filter((f) => f.role === role);
 	console.log(currentForm);
 
-	// async function get_profile_data() {
-	// 	const response = await api
-	// 		.get(`/api/csrf/`)
-	// 		.then((data) => console.log(data))
-	// 		.catch((err) => console.log(err));
-	// 	console.log(response);
-	// }
-	// useEffect(() => {
-	// 	get_profile_data();
-	// });
-
 	return (
 		<div>
 			{
