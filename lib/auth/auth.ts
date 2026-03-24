@@ -13,7 +13,7 @@ type ApiError = {
 export const authUrl = "api/accounts/";
 
 // Reusable error normalizer
-function handleApiError(err: any): ApiError {
+export function handleApiError(err: any): ApiError {
 	return {
 		status: err?.response?.status,
 		error: err?.response?.data?.error || "Something went wrong",

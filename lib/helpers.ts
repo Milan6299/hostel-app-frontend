@@ -33,3 +33,16 @@ api.interceptors.request.use((config) => {
 
 	return config;
 });
+
+export function numToDay(day_in_num: number) {
+	const days = [
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+		"Sunday",
+	];
+	return days[day_in_num];
+}

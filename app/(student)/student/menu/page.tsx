@@ -1,5 +1,11 @@
+import WeeklyMenu from "./WeeklyMenu";
+
 const StudentMenu = () => {
-  return <div>Menu Page</div>;
+	return (
+		<div>
+			<WeeklyMenu />
+		</div>
+	);
 };
 
 export default StudentMenu;
