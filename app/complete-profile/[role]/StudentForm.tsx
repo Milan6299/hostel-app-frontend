@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
-import { checkAuth, completeProfile } from "@/lib/auth/auth";
+import { checkAuth, completeProfile, logoutUser } from "@/lib/auth/auth";
 import SelectionMenu from "@/components/selection-menu";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -77,6 +77,18 @@ export function StudentProfileForm() {
 				router.push("/login");
 			});
 	}, []);
+
+	const handleLogout = async () => {
+		await logoutUser()
+			.then((resp) => {
+				toast(`${resp.message}`);
+				router.push("/login");
+			})
+			.catch((err) => {
+				toast("Logout Successful!");
+				router.push("/login");
+			});
+	};
 
 	async function onSubmit(formdata: CompleteStudentProfileSchema) {
 		setIsLoading(true);
@@ -313,6 +325,9 @@ export function StudentProfileForm() {
 				<CardFooter>
 					<FieldSet>
 						<Field orientation="horizontal">
+							<Button variant={"destructive"} onClick={handleLogout}>
+								Logout
+							</Button>
 							<Button
 								type="button"
 								variant="outline"

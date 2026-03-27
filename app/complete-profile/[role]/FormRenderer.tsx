@@ -13,10 +13,15 @@ export default function FormRenderer({ role }: { role: string }): ReactElement {
 			role: "cook",
 			render: () => <StudentProfileForm />,
 		},
+
+		{
+			role: "admin",
+			render: () => <StudentProfileForm />,
+		},
 	];
 
 	const currentForm = forms.filter((f) => f.role === role);
-	console.log(currentForm);
+	if (!currentForm) console.log(currentForm);
 
 	return (
 		<div>
