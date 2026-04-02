@@ -1,5 +1,4 @@
 import ExpenseCard from "@/components/expense-card";
-import GuestMealCard from "@/components/guest-meal-card";
 import NoticesCard from "@/components/notice-card";
 import NutritionInfoCard from "@/components/nutrition-info-card";
 import ProfileMiniCard from "@/components/profile-mini-card";
@@ -8,7 +7,6 @@ import WeeklyMenuCard from "@/components/weekly-menu-card";
 
 const StudentHome = () => {
 	const date = new Date();
-	// console.log(date.getHours);
 
 	return (
 		<div className="">
@@ -18,7 +16,6 @@ const StudentHome = () => {
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				<div className="grid gap-4 md:grid-cols-1">
 					<TodayMealCard />
-					<GuestMealCard />
 					<WeeklyMenuCard />
 				</div>
 				<div className="grid gap-4">

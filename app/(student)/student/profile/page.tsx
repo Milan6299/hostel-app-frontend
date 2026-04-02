@@ -20,7 +20,6 @@ import SelectionMenu from "@/components/selection-menu";
 import { useEffect, useState } from "react";
 import { updateProfile } from "@/lib/api/profile";
 import { getProfile } from "@/lib/auth/auth";
-import LoadingSpinner from "@/components/ui/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { SkeletonForm } from "@/components/skeleton-form";
 
