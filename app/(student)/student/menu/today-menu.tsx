@@ -1,15 +1,24 @@
 "use client";
+import SkeletonCard from "@/components/skeleton-card";
 import { SkeletonForm } from "@/components/skeleton-form";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getWeeklyMenu } from "@/lib/api/menu";
 import { Star } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState, type ReactElement } from "react";
-import TodayMenuCard from "./today-menu";
 
-export default function WeeklyMenu(): ReactElement {
+export default function TodayMenuCard(): ReactElement {
 	const [menu, setMenu] = useState<[] | null>(null);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const getMenu = async () => {
 		setIsLoading(true);
 		await getWeeklyMenu()
@@ -27,23 +36,23 @@ export default function WeeklyMenu(): ReactElement {
 		getMenu();
 	}, []);
 
-	if (!menu || isLoading) return <SkeletonForm />;
 	const day = (new Date().getDay() + 6) % 7;
 	console.log(day);
 	return (
-		<div className="grid gap-4">
-			<TodayMenuCard />
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-xl">Weekly Menu</CardTitle>
-				</CardHeader>
-				<CardContent className="grid gap-4 md:gap-8 w-full">
-					{menu?.map((item) => (
-						<div key={item.day_name} className="grid gap-4 w-full ">
-							<Badge className="text-lg">{item.day_name}</Badge>
-							<div className="grid gap-8 md:gap-8 md:grid-cols-2">
-								{item.meals.map((meal) => (
-									<div key={meal.id} className="grid gap-2">
+		<Card>
+			<CardHeader>
+				<CardTitle className="text-xl ">Today's Menu</CardTitle>
+			</CardHeader>
+			<CardContent>
+				{isLoading ? (
+					<SkeletonCard />
+				) : (
+					<div className="grid gap-4 md:gap-8 ">
+						{menu
+							?.filter((m) => m.day_index === day)
+							.map((item) =>
+								item.meals.map((meal) => (
+									<div key={meal.id} className="grid gap-4">
 										<div className="grid items-center gap-4 ">
 											<div className="flex w-full gap-2">
 												<div>{meal.meal_type.toUpperCase()}</div>
@@ -69,12 +78,16 @@ export default function WeeklyMenu(): ReactElement {
 											)}
 										</div>
 									</div>
-								))}
-							</div>
-						</div>
-					))}
-				</CardContent>
-			</Card>
-		</div>
+								)),
+							)}
+					</div>
+				)}
+			</CardContent>
+			<CardFooter className="mt-auto ml-auto">
+				<Link href={"/student/menu"}>
+					<Button>View Weekly</Button>
+				</Link>
+			</CardFooter>
+		</Card>
 	);
 }
