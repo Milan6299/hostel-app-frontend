@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 				<div className="flex sticky z-50 top-0 py-4 bg-background items-center mb-4 gap-2">
 					<div className="flex items-center">
 						<SidebarTrigger />
-						<Link href={"#"}>FMU Mess</Link>
+						<Link href={"/"}>FMU Mess</Link>
 					</div>
 					<div className="ml-auto">
 						<ProfileDropdown role={role} />

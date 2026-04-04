@@ -2,8 +2,11 @@ import ExpenseCard from "@/components/expense-card";
 import NoticesCard from "@/components/notice-card";
 import NutritionInfoCard from "@/components/nutrition-info-card";
 import ProfileMiniCard from "@/components/profile-mini-card";
-import TodayMealCard from "@/components/today-meal-card";
+// import TodayMealCard from "@/components/today-meal-card";
 import WeeklyMenuCard from "@/components/weekly-menu-card";
+import TodayMenuCard from "./menu/today-menu";
+import { Suspense } from "react";
+import { SkeletonForm } from "@/components/skeleton-form";
 
 const StudentHome = () => {
 	const date = new Date();
@@ -15,7 +18,7 @@ const StudentHome = () => {
 			</h1>
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 				<div className="grid gap-4 md:grid-cols-1">
-					<TodayMealCard />
+					<TodayMenuCard />
 					<WeeklyMenuCard />
 				</div>
 				<div className="grid gap-4">
