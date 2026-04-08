@@ -5,154 +5,62 @@ import {
 	CardContent,
 	CardFooter,
 	CardHeader,
-	CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
-import { Check, X, Plus, Minus, Circle, User } from "lucide-react";
+import GuestMealControl from "./guest-meal-control";
+import { api } from "@/lib/helpers";
 
-const TodayMealCard = ({ meal }: any) => {
-	// 🔥 STATE
-	const [isOn, setIsOn] = useState(false);
-	const [preference, setPreference] = useState<"veg" | "nonveg">("veg");
-	const [guestVeg, setGuestVeg] = useState(0);
-	const [guestNonveg, setGuestNonveg] = useState(0);
+const TodayMealCard = ({ meal, guestMeals, onOptOut, onRefresh }: any) => {
+	const guestMealForThis = guestMeals.find((g: any) => g.meal === meal.id);
 
-	// 🔥 INIT FROM BACKEND
-	useEffect(() => {
-		setIsOn(meal.status === "ON");
-		setGuestVeg(meal.guest_veg_count || 0);
-		setGuestNonveg(meal.guest_nonveg_count || 0);
-	}, [meal]);
-
-	// 🔥 API CALL
-	const toggleMeal = async (status: boolean) => {
+	const handleRejoin = async () => {
 		try {
-			const res = await fetch("/api/toggle-meal", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-					meal_id: meal.id,
-					status,
-					guest_veg_count: guestVeg,
-					guest_nonveg_count: guestNonveg,
-				}),
-			});
-
-			const data = await res.json();
-
-			if (!res.ok) throw new Error(data.error);
-
-			setIsOn(status);
+			await api.delete(`/api/menu/opt-outs/${meal.opt_out_id}/`);
+			onRefresh();
 		} catch (err) {
 			console.error(err);
 		}
 	};
 
-	// 🔥 AUTO UPDATE ON GUEST CHANGE
-	useEffect(() => {
-		if (isOn) {
-			toggleMeal(true);
-		}
-	}, [guestVeg, guestNonveg]);
-
-	// 🔥 PRICE CALC (frontend preview only)
-	const totalGuestPrice =
-		guestVeg * meal.guest_price + guestNonveg * meal.guest_price;
-
 	return (
 		<Card>
-			<CardHeader>
-				<CardTitle className="flex justify-between">
-					<span>{meal.meal_type}</span>
-					<Badge>{meal.is_special ? "Special" : "Normal"}</Badge>
-				</CardTitle>
+			<CardHeader className="flex justify-between">
+				<span className="font-semibold uppercase">{meal.meal_type}</span>
+				<Badge>{meal.is_special ? "Special" : "Normal"}</Badge>
 			</CardHeader>
 
-			<CardContent className="space-y-4">
-				{/* MENU ITEMS */}
+			<CardContent className="space-y-3">
 				<p className="text-sm text-muted-foreground">
 					{meal.items.map((i: any) => i.name).join(", ")}
 				</p>
 
-				{/* PREFERENCE SWITCH */}
-				<div className="flex items-center gap-2">
-					<span className="text-sm">Preference:</span>
-					<Button
-						onClick={() =>
-							setPreference(preference === "veg" ? "nonveg" : "veg")
-						}
-						variant="secondary"
-						size="sm"
-					>
-						<Circle
-							className={`${
-								preference === "veg" ? "bg-green-500" : "bg-red-500"
-							} rounded-full`}
-						/>
-					</Button>
-				</div>
+				<p>
+					Status:{" "}
+					<span className={meal.is_active ? "text-green-500" : "text-red-500"}>
+						{meal.is_active ? "Active" : "Opted Out"}
+					</span>
+				</p>
 
-				{/* GUEST CONTROLS */}
-				<div className="space-y-2">
-					<p className="text-sm font-medium">Guest Meals</p>
-
-					{/* VEG */}
-					<div className="flex items-center justify-between">
-						<span className="flex items-center gap-2">
-							<User /> Veg: {guestVeg}
-						</span>
-						<div className="flex gap-2">
-							<Button size="sm" onClick={() => setGuestVeg((p) => p + 1)}>
-								<Plus />
-							</Button>
-							{guestVeg > 0 && (
-								<Button
-									size="sm"
-									onClick={() => setGuestVeg((p) => Math.max(0, p - 1))}
-								>
-									<Minus />
-								</Button>
-							)}
-						</div>
-					</div>
-
-					{/* NONVEG */}
-					<div className="flex items-center justify-between">
-						<span className="flex items-center gap-2">
-							<User /> NonVeg: {guestNonveg}
-						</span>
-						<div className="flex gap-2">
-							<Button size="sm" onClick={() => setGuestNonveg((p) => p + 1)}>
-								<Plus />
-							</Button>
-							{guestNonveg > 0 && (
-								<Button
-									size="sm"
-									onClick={() => setGuestNonveg((p) => Math.max(0, p - 1))}
-								>
-									<Minus />
-								</Button>
-							)}
-						</div>
-					</div>
-				</div>
-
-				{/* PRICE */}
-				<div className="text-sm">Guest Total: ₹{totalGuestPrice}</div>
+				{/* ✅ Guest Meal Section */}
+				<GuestMealControl
+					meal={meal}
+					initialVeg={guestMealForThis?.veg_count || 0}
+					initialNonveg={guestMealForThis?.nonveg_count || 0}
+					onSuccess={onRefresh}
+				/>
 			</CardContent>
 
-			<CardFooter className="flex justify-end gap-2">
-				<Button onClick={() => toggleMeal(true)} variant="success">
-					<Check />
-				</Button>
-				<Button onClick={() => toggleMeal(false)} variant="destructive">
-					<X />
-				</Button>
+			<CardFooter className="flex justify-end">
+				{meal.is_active ? (
+					<Button variant="destructive" onClick={onOptOut}>
+						Opt Out
+					</Button>
+				) : (
+					<Button variant="success" onClick={handleRejoin}>
+						Rejoin
+					</Button>
+				)}
 			</CardFooter>
 		</Card>
 	);
