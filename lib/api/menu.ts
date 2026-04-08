@@ -10,3 +10,13 @@ export const getWeeklyMenu = async () => {
 		throw handleApiError(err);
 	}
 };
+
+export const getGuestMeals = async () => {
+	try {
+		const resp = await api.get(`${menuUrl}/guest-meal/list/`);
+		console.log(resp.data);
+		return resp.data;
+	} catch (err: any) {
+		throw handleApiError(err);
+	}
+};
