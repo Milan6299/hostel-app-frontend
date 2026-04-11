@@ -41,6 +41,7 @@ const formSchema = z.object({
 	year: z.number().min(1).max(5),
 	hostel_block: z.number().min(1),
 	hostel_type: z.enum(["boys", "girls"]),
+	food_type: z.enum(["veg", "nonveg"]),
 });
 
 export type CompleteStudentProfileSchema = z.infer<typeof formSchema>;
@@ -61,6 +62,7 @@ export function StudentProfileForm() {
 			year: 1,
 			hostel_type: "boys",
 			hostel_block: 1,
+			food_type: "veg",
 		},
 	});
 	useEffect(() => {
@@ -114,8 +116,12 @@ export function StudentProfileForm() {
 				return;
 			}
 
-			// fallback
-			toast(error || "Something went wrong");
+			if (err && typeof err === "object") {
+				const messages = Object.values(err).flat().join(", ");
+				toast(messages);
+			} else {
+				toast("Something went wrong");
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -317,6 +323,31 @@ export function StudentProfileForm() {
 										)}
 									/>
 								</FieldGroup>
+							</FieldGroup>
+							<FieldGroup>
+								<Controller
+									name="food_type"
+									control={form.control}
+									render={({ field, fieldState }) => (
+										<Field data-invalid={fieldState.invalid}>
+											<FieldLabel>Meal Preference</FieldLabel>
+
+											<SelectionMenu
+												placeholder="Select meal preference"
+												items={[
+													{ value: "veg", label: "VEG" },
+													{ value: "nonveg", label: "NON-VEG" },
+												]}
+												value={field.value}
+												onChange={field.onChange}
+											/>
+
+											{fieldState.invalid && (
+												<FieldError errors={[fieldState.error]} />
+											)}
+										</Field>
+									)}
+								/>
 							</FieldGroup>
 						</FieldSet>
 					</form>
