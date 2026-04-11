@@ -13,7 +13,7 @@ export const getWeeklyMenu = async () => {
 
 export const getGuestMeals = async () => {
 	try {
-		const resp = await api.get(`${menuUrl}/guest-meal/list/`);
+		const resp = await api.get(`${menuUrl}/guest-meals/`);
 		console.log(resp.data);
 		return resp.data;
 	} catch (err: any) {
