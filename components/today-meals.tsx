@@ -3,37 +3,32 @@
 import { useEffect, useState } from "react";
 import TodayMealCard from "./today-meal-card";
 import OptOutModal from "./opt-out-modal";
+import SkeletonCard from "./skeleton-card";
 import { api } from "@/lib/helpers";
 import { getGuestMeals } from "@/lib/api/menu";
-import SkeletonCard from "./skeleton-card";
+
+export function getISTDate() {
+	return new Intl.DateTimeFormat("en-CA", {
+		timeZone: "Asia/Kolkata",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(new Date());
+}
 
 export default function TodayMeals() {
-	const [meals, setMeals] = useState<any[]>([]);
+	const [meals, setMeals] = useState<any[]>([]); // Changed to Array
 	const [guestMeals, setGuestMeals] = useState<any[]>([]);
-	const [selectedMeal, setSelectedMeal] = useState<any>(null);
+	const [optOutMeal, setOptOutMeal] = useState<any>(null);
 
-	const today = new Date().toISOString().split("T")[0];
+	const today = getISTDate();
 
 	const fetchMeals = async () => {
 		try {
-			const [mealResp, statusResp] = await Promise.all([
-				api.get(`/api/menu/meals/?start=${today}&end=${today}`),
-				api.get(`/api/menu/meals/status/?start=${today}&end=${today}`),
-			]);
-
-			const mealsData = mealResp.data;
-			const statusData = statusResp.data;
-
-			const merged = mealsData.map((meal: any) => {
-				const status = statusData.find((s: any) => s.meal_id === meal.id);
-
-				return {
-					...meal,
-					is_active: status?.is_active ?? true,
-				};
-			});
-
-			setMeals(merged);
+			// Calling your dedicated backend endpoint!
+			const res = await api.get(`/api/menu/today/?date=${today}`);
+			console.log(res);
+			setMeals(res.data || []);
 		} catch (err) {
 			console.error(err);
 		}
@@ -42,7 +37,7 @@ export default function TodayMeals() {
 	const fetchGuestMeals = async () => {
 		try {
 			const res = await getGuestMeals();
-			setGuestMeals(res);
+			setGuestMeals(res || []);
 		} catch (err) {
 			console.error(err);
 		}
@@ -56,29 +51,36 @@ export default function TodayMeals() {
 	return (
 		<div className="space-y-4">
 			{meals.length === 0 ? (
-				<SkeletonCard />
+				<div>
+					No meals found!
+					<SkeletonCard />
+				</div>
 			) : (
-				meals.map((meal) => (
+				meals.map((meal: any) => (
 					<TodayMealCard
-						key={meal.id}
+						key={`${meal.date}-${meal.meal_type}-${meal.is_active}`}
 						meal={meal}
+						mealType={meal.meal_type} // Added this missing prop
+						nonveg={meal.nonveg_items}
+						veg={meal.veg_items}
 						guestMeals={guestMeals}
-						onOptOut={() => setSelectedMeal(meal)}
-						onRefresh={() => {
-							fetchMeals();
-							fetchGuestMeals();
+						onOptOut={() => setOptOutMeal(meal)}
+						onRefresh={async () => {
+							await fetchMeals();
+							await fetchGuestMeals();
 						}}
 					/>
 				))
 			)}
 
-			{selectedMeal && (
+			{optOutMeal && (
 				<OptOutModal
-					meal={selectedMeal}
-					onClose={() => setSelectedMeal(null)}
-					onSuccess={() => {
-						setSelectedMeal(null);
-						fetchMeals();
+					meal={optOutMeal}
+					onClose={() => setOptOutMeal(null)}
+					onSuccess={async () => {
+						setOptOutMeal(null);
+						await fetchMeals();
+						await fetchGuestMeals();
 					}}
 				/>
 			)}
