@@ -1,10 +1,8 @@
+import TodayMenuCard from "./menu/today-menu";
 import ExpenseCard from "@/components/expense-card";
 import NoticesCard from "@/components/notice-card";
-import NutritionInfoCard from "@/components/nutrition-info-card";
 import ProfileMiniCard from "@/components/profile-mini-card";
 // import TodayMealCard from "@/components/today-meal-card";
-import WeeklyMenuCard from "@/components/weekly-menu-card";
-import TodayMenuCard from "./menu/today-menu";
 import TodayMeals from "@/components/today-meals";
 
 const StudentHome = () => {
@@ -25,7 +23,6 @@ const StudentHome = () => {
 					<ExpenseCard />
 				</div>
 				<div className="grid gap-4">
-					<WeeklyMenuCard />
 					<ProfileMiniCard />
 				</div>
 			</div>
