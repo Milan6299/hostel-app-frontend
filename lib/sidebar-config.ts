@@ -5,15 +5,13 @@ import {
 	MessageSquare,
 	Bell,
 	Users,
-	ClipboardList,
 	BarChart3,
 	Settings,
-	Package,
 } from "lucide-react";
 
 export const sidebarConfig = {
 	student: [
-		{ title: "Dashboard", url: "/student", icon: Home },
+		{ title: "Home", url: "/student", icon: Home },
 		{ title: "Menu", url: "/student/menu", icon: Utensils },
 		{ title: "Notices", url: "/student/notices", icon: Bell },
 		{ title: "History", url: "/student/history", icon: ReceiptIndianRupee },
