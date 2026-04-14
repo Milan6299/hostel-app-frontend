@@ -1,83 +1,104 @@
+"use client";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Bed, BookMarked, Hotel, Type, User } from "lucide-react";
+import { Bed, BookMarked, Hotel, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getProfile } from "@/lib/auth/auth";
+import { toast } from "sonner";
+import SkeletonCard from "./skeleton-card";
 
 interface Profile {
-  name: string;
-  department: string;
-  room: number;
-  hostel: string;
-  hostelType: string;
-  mealStatus: string;
-  phone: number;
+	first_name: string;
+	last_name: string;
+	department: string;
+	room_no: number;
+	hostel_type: string;
+	hostel_block: string;
+	phone: number;
 }
 
 const ProfileMiniCard = () => {
-  const profile: Profile = {
-    name: "Mahesh Chandra Nayak",
-    department: "MCA",
-    room: 214,
-    hostel: "A",
-    hostelType: "Boys",
-    mealStatus: "ON",
-    phone: 8458030129,
-  };
+	const [isLoading, setIsLoading] = useState(false);
+	const [proData, setProData] = useState<Profile | null>(null);
 
-  return (
-    <Card className="relative overflow-hidden">
-      <CardContent>
-        <div className="grid h-full gap-4">
-          <div className="flex gap-4 items-center justify-center">
-            <div className="relative h-32 aspect-square overflow-hidden rounded-full">
-              <Image fill src={"/profile.svg"} alt="Profile" />
-            </div>
-          </div>
-          <CardTitle className="font-bold text-center flex justify-center items-center ">
-            <div className="text-center text-sm md:text-base flex items-center bg-foreground rounded-full px-4 text-background leading-relaxed">
-              {profile.name}
-            </div>
-          </CardTitle>
+	const getData = async () => {
+		setIsLoading(true);
+		await getProfile()
+			.then((resp) => {
+				console.log(resp);
+				setProData(resp);
+			})
+			.catch((err) => {
+				const { status } = err || {};
+				console.log(status);
+				toast.error("Error occured! Try again!");
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	};
+	useEffect(() => {
+		getData();
+	}, []);
 
-          <CardTitle className="font-bold text-center flex justify-center items-center ">
-            <div className="text-center text-sm md:text-base flex items-center bg-foreground rounded-full px-4 text-background leading-relaxed">
-              <BookMarked className="w-5 h-4" /> {profile.department}
-            </div>
-          </CardTitle>
-          <div className="">
-            <CardDescription>
-              <div className="flex mt-4 justify-center items-center gap-4">
-                <div className="flex gap-2 justify-center items-center text-lg">
-                  <Hotel className="w-5 h-5" /> <span>{profile.hostel}</span>
-                </div>
-                <div className="flex justify-center items-center gap-2">
-                  <Bed /> {profile.room}
-                </div>
-                <div className="flex justify-center items-center gap-2">
-                  <User /> {profile.hostelType}
-                </div>
-              </div>
+	if (isLoading || !proData) return <SkeletonCard />;
 
-              <p className="text-center mt-2">+91 {profile.phone}</p>
-            </CardDescription>
-          </div>
-        </div>
-      </CardContent>
+	return (
+		<Card className="relative overflow-hidden">
+			<CardContent>
+				<div className="grid h-full gap-4">
+					<div className="flex gap-4 items-center justify-center">
+						<div className="relative h-32 aspect-square overflow-hidden rounded-full">
+							<Image fill src={"/profile.svg"} alt="Profile" />
+						</div>
+					</div>
+					<CardTitle className="font-bold text-center flex justify-center items-center ">
+						<div className="text-center text-sm md:text-base flex items-center bg-foreground rounded-full px-4 text-background leading-relaxed">
+							{proData.first_name} {proData.last_name}
+						</div>
+					</CardTitle>
 
-      <CardFooter>
-        <Link href="/student/profile" className="w-full flex justify-center">
-          <Button variant={"info"}>Profile</Button>
-        </Link>
-      </CardFooter>
-    </Card>
-  );
+					<CardTitle className="font-bold text-center flex justify-center items-center ">
+						<div className="text-center text-sm md:text-base flex items-center bg-foreground rounded-full px-4 text-background leading-relaxed">
+							<BookMarked className="w-5 h-4" /> {proData.department}
+						</div>
+					</CardTitle>
+					<div className="">
+						<CardDescription>
+							<div className="flex mt-4 justify-center items-center gap-4">
+								<div className="flex gap-2 justify-center items-center text-lg">
+									<Hotel className="w-5 h-5" />{" "}
+									<span>{proData.hostel_block}</span>
+								</div>
+								<div className="flex justify-center items-center gap-2">
+									<Bed /> {proData.room_no}
+								</div>
+								<div className="flex justify-center items-center gap-2">
+									<User /> {proData.hostel_type === "boys" ? "BOYS" : "GIRLS"}
+								</div>
+							</div>
+
+							<p className="text-center mt-2">+91 {proData.phone}</p>
+						</CardDescription>
+					</div>
+				</div>
+			</CardContent>
+
+			<CardFooter>
+				<Link href="/student/profile" className="w-full flex justify-center">
+					<Button variant={"info"}>Profile</Button>
+				</Link>
+			</CardFooter>
+		</Card>
+	);
 };
 
 export default ProfileMiniCard;
