@@ -1,7 +1,6 @@
-import { LoginSchema } from "@/app/login/login-form";
-import { api } from "../helpers";
-import { CompleteStudentProfileSchema } from "@/app/complete-profile/[role]/StudentForm";
 import { SignupSchema } from "@/app/signup/signup-form";
+import { api } from "../helpers";
+import { LoginSchema } from "@/app/login/login-form";
 
 type ApiError = {
 	status: number;
@@ -48,15 +47,6 @@ export async function logoutUser() {
 	try {
 		const resp = await api.post(`${authUrl}logout/`);
 		return resp.data;
-	} catch (err: any) {
-		throw handleApiError(err);
-	}
-}
-// Complete Profile
-export async function completeProfile(data: CompleteStudentProfileSchema) {
-	try {
-		const response = await api.post(`${authUrl}complete_profile/`, data);
-		return response.data;
 	} catch (err: any) {
 		throw handleApiError(err);
 	}
