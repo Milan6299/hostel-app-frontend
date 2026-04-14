@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import GuestMealControl from "./guest-meal-control";
 import { api } from "@/lib/helpers";
+import { Calendar, Divide } from "lucide-react";
 
 const MealCard = ({ meal, mealType, guestMeals, onOptOut, onRefresh }: any) => {
 	const [loading, setLoading] = useState(false);
@@ -84,6 +85,14 @@ const MealCard = ({ meal, mealType, guestMeals, onOptOut, onRefresh }: any) => {
 			</CardHeader>
 
 			<CardContent className="space-y-3">
+				{
+					//Date
+				}
+				<div className="flex font-bold gap-2">
+					<Calendar />
+					{meal.date}
+				</div>
+
 				{/* FOOD SELECT */}
 				{canShowVeg && canShowNonVeg && meal.is_active && (
 					<div className="flex gap-2">

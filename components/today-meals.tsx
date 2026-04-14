@@ -97,7 +97,9 @@ export default function TodayMeals() {
 						</div>
 
 						<div>
-							<h2 className="text-xl font-bold mb-4 pb-2">Plan for Tomorrow</h2>
+							<h2 className="text-xl font-bold mb-4 pb-2">
+								Plan for Tomorrow{" "}
+							</h2>
 							<div className="flex flex-col md:flex-row gap-4">
 								{tomorrowMealsList.length === 0 ? (
 									<p className="text-muted-foreground text-sm">
