@@ -30,9 +30,7 @@ export default function ProfileDropdown({ role }: { role: Role }) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="outline">
-					<UserCircle />
-				</Button>
+				<UserCircle />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuGroup>
