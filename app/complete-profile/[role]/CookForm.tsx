@@ -180,49 +180,51 @@ export function CookProfileForm() {
 										)}
 									/>
 								</FieldGroup>
-								{/* Phone */}
-								<Controller
-									name="phone"
-									control={form.control}
-									render={({ field, fieldState }) => (
-										<Field data-invalid={fieldState.invalid}>
-											<FieldLabel>Phone</FieldLabel>
-											<Input {...field} placeholder="Phone Number" />
-											{fieldState.invalid && (
-												<FieldError errors={[fieldState.error]} />
-											)}
-										</Field>
-									)}
-								/>
+								<FieldGroup className="grid sm:grid-cols-2">
+									{/* Phone */}
+									<Controller
+										name="phone"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Phone</FieldLabel>
+												<Input {...field} placeholder="Phone Number" />
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
+										)}
+									/>
 
-								{/* Gender */}
-								<Controller
-									name="gender"
-									control={form.control}
-									render={({ field, fieldState }) => (
-										<Field data-invalid={fieldState.invalid}>
-											<FieldLabel>Gender</FieldLabel>
+									{/* Gender */}
+									<Controller
+										name="gender"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Gender</FieldLabel>
 
-											<SelectionMenu
-												placeholder="Select gender"
-												items={[
-													{ value: "M", label: "Male" },
-													{ value: "F", label: "Female" },
-													{ value: "O", label: "Other" },
-												]}
-												value={field.value}
-												onChange={field.onChange}
-											/>
+												<SelectionMenu
+													placeholder="Select gender"
+													items={[
+														{ value: "M", label: "Male" },
+														{ value: "F", label: "Female" },
+														{ value: "O", label: "Other" },
+													]}
+													value={field.value}
+													onChange={field.onChange}
+												/>
 
-											{fieldState.invalid && (
-												<FieldError errors={[fieldState.error]} />
-											)}
-										</Field>
-									)}
-								/>
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
+										)}
+									/>
+								</FieldGroup>
 							</FieldGroup>
 							<FieldGroup>
-								<FieldGroup className="grid sm:grid-cols-4">
+								<FieldGroup className="grid sm:grid-cols-3">
 									{/* Hostel Type */}
 									<Controller
 										name="hostel_type"
@@ -275,8 +277,8 @@ export function CookProfileForm() {
 				</CardContent>
 
 				<CardFooter>
-					<FieldSet>
-						<Field orientation="horizontal">
+					<FieldSet className="w-full">
+						<Field orientation="horizontal" className="grid w-full grid-cols-3">
 							<Button variant={"destructive"} onClick={handleLogout}>
 								Logout
 							</Button>
