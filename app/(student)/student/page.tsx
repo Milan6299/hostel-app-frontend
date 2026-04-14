@@ -13,17 +13,17 @@ const StudentHome = () => {
 			<h1 className="mb-4">
 				Good {date.getHours() > 17 ? "Evening" : "Morning"}, User
 			</h1>
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				<div className="grid gap-4 md:grid-cols-">
+			<div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+				<div className="md:col-span-2">
 					<TodayMeals />
-					<TodayMenuCard />
 				</div>
-				<div className="grid gap-4">
+				<div className="grid gap-4 lg:grid-cols-2">
+					<TodayMenuCard />
+					<ProfileMiniCard />
+				</div>
+				<div className="grid gap-4 lg:grid-cols-2">
 					<NoticesCard />
 					<ExpenseCard />
-				</div>
-				<div className="grid gap-4">
-					<ProfileMiniCard />
 				</div>
 			</div>
 		</div>
