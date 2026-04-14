@@ -35,35 +35,25 @@ import { completeProfile } from "@/lib/api/profile";
 const formSchema = z.object({
 	first_name: z.string().min(1),
 	last_name: z.string().min(1),
-	roll_no: z.string().min(3),
-	department: z.string().min(2),
-	room_no: z.number().min(1),
 	phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
-	year: z.number().min(1).max(5),
 	hostel_block: z.number().min(1),
 	hostel_type: z.enum(["boys", "girls"]),
-	food_type: z.enum(["veg", "nonveg"]),
 });
 
-export type CompleteStudentProfileSchema = z.infer<typeof formSchema>;
+export type CompleteCookProfileSchema = z.infer<typeof formSchema>;
 
-export function StudentProfileForm() {
+export function CookProfileForm() {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
-	const form = useForm<CompleteStudentProfileSchema>({
+	const form = useForm<CompleteCookProfileSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			first_name: "",
 			last_name: "",
-			roll_no: "",
-			department: "",
-			room_no: 1,
 			phone: "",
-			year: 1,
-			hostel_type: "boys",
 			hostel_block: 1,
-			food_type: "veg",
+			hostel_type: "boys",
 		},
 	});
 	useEffect(() => {
@@ -93,7 +83,7 @@ export function StudentProfileForm() {
 			});
 	};
 
-	async function onSubmit(formdata: CompleteStudentProfileSchema) {
+	async function onSubmit(formdata: CompleteCookProfileSchema) {
 		setIsLoading(true);
 		try {
 			const response = await completeProfile(formdata);
@@ -144,13 +134,13 @@ export function StudentProfileForm() {
 			<LoadingSpinner isLoading={isLoading} />
 			<Card className="w-full mx-auto sm:min-w-md sm:max-w-xl">
 				<CardHeader>
-					<CardTitle>Student Profile</CardTitle>
-					<CardDescription>Please fill in your hostel details</CardDescription>
+					<CardTitle>Cook Profile</CardTitle>
+					<CardDescription>Please fill in the details</CardDescription>
 				</CardHeader>
 
 				<CardContent>
 					<form
-						id="complete-student-profile"
+						id="complete-cook-profile"
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<FieldSet disabled={isLoading} className="grid ">
@@ -188,37 +178,6 @@ export function StudentProfileForm() {
 										)}
 									/>
 								</FieldGroup>
-								<FieldGroup className="grid grid-cols-2">
-									{/* Roll Number */}
-									<Controller
-										name="roll_no"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Roll Number</FieldLabel>
-												<Input {...field} placeholder="Roll Number" />
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-
-									{/* Department */}
-									<Controller
-										name="department"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Department</FieldLabel>
-												<Input {...field} placeholder="Department" />
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-								</FieldGroup>
 								{/* Phone */}
 								<Controller
 									name="phone"
@@ -236,48 +195,6 @@ export function StudentProfileForm() {
 							</FieldGroup>
 							<FieldGroup>
 								<FieldGroup className="grid sm:grid-cols-4">
-									{/* Year */}
-									<Controller
-										name="year"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Year</FieldLabel>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) =>
-														field.onChange(e.target.valueAsNumber)
-													}
-												/>
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-									{/* Room */}
-									<Controller
-										name="room_no"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Room Number</FieldLabel>
-												<Input
-													type="number"
-													{...field}
-													onChange={(e) =>
-														field.onChange(Number(e.target.value))
-													}
-													placeholder="Room Number"
-												/>
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-
 									{/* Hostel Type */}
 									<Controller
 										name="hostel_type"
@@ -325,31 +242,6 @@ export function StudentProfileForm() {
 									/>
 								</FieldGroup>
 							</FieldGroup>
-							<FieldGroup>
-								<Controller
-									name="food_type"
-									control={form.control}
-									render={({ field, fieldState }) => (
-										<Field data-invalid={fieldState.invalid}>
-											<FieldLabel>Meal Preference</FieldLabel>
-
-											<SelectionMenu
-												placeholder="Select meal preference"
-												items={[
-													{ value: "veg", label: "VEG" },
-													{ value: "nonveg", label: "NON-VEG" },
-												]}
-												value={field.value}
-												onChange={field.onChange}
-											/>
-
-											{fieldState.invalid && (
-												<FieldError errors={[fieldState.error]} />
-											)}
-										</Field>
-									)}
-								/>
-							</FieldGroup>
 						</FieldSet>
 					</form>
 				</CardContent>
@@ -368,7 +260,7 @@ export function StudentProfileForm() {
 								Reset
 							</Button>
 
-							<Button type="submit" form="complete-student-profile">
+							<Button type="submit" form="complete-cook-profile">
 								Submit
 							</Button>
 						</Field>

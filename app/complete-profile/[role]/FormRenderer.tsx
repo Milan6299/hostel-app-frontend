@@ -2,6 +2,7 @@
 import { type ReactElement } from "react";
 
 import { StudentProfileForm } from "./StudentForm";
+import { CookProfileForm } from "./CookForm";
 
 export default function FormRenderer({ role }: { role: string }): ReactElement {
 	const forms = [
@@ -11,7 +12,7 @@ export default function FormRenderer({ role }: { role: string }): ReactElement {
 		},
 		{
 			role: "cook",
-			render: () => <StudentProfileForm />,
+			render: () => <CookProfileForm />,
 		},
 
 		{
