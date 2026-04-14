@@ -29,7 +29,7 @@ export default function WeeklyMenu(): ReactElement {
 
 	if (!menu || isLoading) return <SkeletonForm />;
 	const day = (new Date().getDay() + 6) % 7;
-	console.log(day);
+	// console.log(day);
 	return (
 		<div className="grid gap-4">
 			<TodayMenuCard />

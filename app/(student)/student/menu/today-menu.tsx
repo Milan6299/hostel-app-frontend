@@ -1,6 +1,5 @@
 "use client";
 import SkeletonCard from "@/components/skeleton-card";
-import { SkeletonForm } from "@/components/skeleton-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +9,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getWeeklyMenu } from "@/lib/api/menu";
 import { Star } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +35,7 @@ export default function TodayMenuCard(): ReactElement {
 	}, []);
 
 	const day = (new Date().getDay() + 6) % 7;
-	console.log(day);
+	// console.log(day);
 	return (
 		<Card>
 			<CardHeader>
