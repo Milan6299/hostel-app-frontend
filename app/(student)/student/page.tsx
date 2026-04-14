@@ -20,7 +20,7 @@ const StudentHome = () => {
 					<TodayMeals />
 				</div>
 				<div className="grid gap-4 lg:grid-cols-2">
-					<TodayMenuCard />
+					<TodayMenuCard showWeekly={true} />
 					<ProfileMiniCard />
 				</div>
 				<div className="grid gap-4 lg:grid-cols-2">

@@ -14,7 +14,11 @@ import { Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ReactElement } from "react";
 
-export default function TodayMenuCard(): ReactElement {
+export default function TodayMenuCard({
+	showWeekly,
+}: {
+	showWeekly?: boolean;
+}): ReactElement {
 	const [menu, setMenu] = useState<[] | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const getMenu = async () => {
@@ -81,11 +85,13 @@ export default function TodayMenuCard(): ReactElement {
 					</div>
 				)}
 			</CardContent>
-			<CardFooter className="mt-auto ml-auto">
-				<Link href={"/student/menu"}>
-					<Button>View Weekly</Button>
-				</Link>
-			</CardFooter>
+			{showWeekly && (
+				<CardFooter className="mt-auto ml-auto">
+					<Link href={"/student/menu"}>
+						<Button>View Weekly</Button>
+					</Link>
+				</CardFooter>
+			)}
 		</Card>
 	);
 }
