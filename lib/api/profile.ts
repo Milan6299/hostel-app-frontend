@@ -1,6 +1,8 @@
 import { StudentProfileSchema } from "@/app/(student)/student/profile/page";
 import { api } from "@/lib/helpers";
-import { authUrl } from "../auth/auth";
+import { authUrl, handleApiError } from "../auth/auth";
+import { CompleteStudentProfileSchema } from "@/app/complete-profile/[role]/StudentForm";
+import { CompleteCookProfileSchema } from "@/app/complete-profile/[role]/CookForm";
 
 export async function getProfile() {
 	try {
@@ -9,6 +11,17 @@ export async function getProfile() {
 	} catch (err) {
 		console.error(err);
 		throw err;
+	}
+}
+
+export async function completeProfile(
+	data: CompleteStudentProfileSchema | CompleteCookProfileSchema,
+) {
+	try {
+		const response = await api.post(`${authUrl}complete_profile/`, data);
+		return response.data;
+	} catch (err: any) {
+		throw handleApiError(err);
 	}
 }
 
