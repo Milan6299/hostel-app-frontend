@@ -12,16 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import GuestMealControl from "./guest-meal-control";
 import { api } from "@/lib/helpers";
 
-const TodayMealCard = ({
-	meal,
-	mealType,
-	guestMeals,
-	onOptOut,
-	onRefresh,
-}: any) => {
+const MealCard = ({ meal, mealType, guestMeals, onOptOut, onRefresh }: any) => {
 	const [loading, setLoading] = useState(false);
 
-	// This will now work successfully because meal.id is an integer!
 	const guestMealForThis = guestMeals.find((g: any) => g.meal === meal.id);
 
 	const isLocked = !meal.can_modify;
@@ -62,29 +55,37 @@ const TodayMealCard = ({
 		}
 	};
 
+	// Determine which items to show based on the active selection
+	const displayItems =
+		selectedType === "nonveg" && meal.nonveg_items?.length > 0
+			? meal.nonveg_items
+			: meal.veg_items?.length > 0
+				? meal.veg_items
+				: meal.items; // Fallback just in case
+
 	return (
-		<Card className="transition">
+		<Card className="transition w-full">
 			<CardHeader className="flex justify-between items-center">
 				<span className="font-semibold uppercase">{mealType}</span>
 
 				<div className="flex gap-2 items-center">
 					<Badge>{meal.is_special ? "Special" : "Normal"}</Badge>
 
-					<Badge variant={selectedType === "veg" ? "success" : "destructive"}>
-						{selectedType === "veg" ? "Veg" : "Non-Veg"}
-					</Badge>
+					<Badge>{selectedType === "veg" ? "Veg 🌱" : "Non-Veg 🍗"}</Badge>
 
 					{meal.is_override && canShowVeg && canShowNonVeg && (
 						<Badge variant="secondary">Override</Badge>
 					)}
 
-					{!meal.is_active && <Badge variant="destructive">Opted Out</Badge>}
+					{
+						// !meal.is_active && <Badge variant="destructive">OFF</Badge>
+					}
 				</div>
 			</CardHeader>
 
 			<CardContent className="space-y-3">
 				{/* FOOD SELECT */}
-				{canShowVeg && canShowNonVeg && (
+				{canShowVeg && canShowNonVeg && meal.is_active && (
 					<div className="flex gap-2">
 						<Button
 							variant={selectedType === "veg" ? "default" : "outline"}
@@ -104,25 +105,24 @@ const TodayMealCard = ({
 					</div>
 				)}
 
-				<p className="text-sm text-muted-foreground">
-					{selectedType === "nonveg" && meal.nonveg_items?.length > 0
-						? meal.nonveg_items.join(", ")
-						: meal.veg_items?.join(", ") || meal.items.join(", ")}
-				</p>
+				{/* 👈 DYNAMIC ITEM DISPLAY */}
+				{
+					<p className="text-sm text-muted-foreground">
+						{displayItems.join(", ")}
+					</p>
+				}
 
 				<p>
 					Status:{" "}
 					<span className={meal.is_active ? "text-green-500" : "text-red-500"}>
-						{meal.is_active ? "Active" : "Opted Out"}
+						{meal.is_active ? "ON" : "OFF"}
 					</span>
 				</p>
 
 				{/* CUTOFF */}
 				{isLocked && (
 					<p className="text-xs text-red-400">
-						{meal.meal_type === "lunch"
-							? "Lunch closed at 12 AM (previous day)"
-							: "Dinner closed at 4 PM today"}
+						{meal.meal_type === "lunch" ? "Lunch closed " : "Dinner closed"}
 					</p>
 				)}
 
@@ -139,17 +139,23 @@ const TodayMealCard = ({
 				)}
 			</CardContent>
 
-			<CardFooter className="flex justify-end">
+			<CardFooter className="flex justify-end mt-auto">
 				{meal.is_active ? (
 					<Button
 						variant="destructive"
+						className="w-full sm:w-auto"
 						onClick={() => onOptOut(meal)}
 						disabled={isLocked}
 					>
 						Opt Out
 					</Button>
 				) : (
-					<Button variant="default" onClick={handleRejoin} disabled={isLocked}>
+					<Button
+						variant="default"
+						className="w-full sm:w-auto"
+						onClick={handleRejoin}
+						disabled={isLocked}
+					>
 						Rejoin
 					</Button>
 				)}
@@ -158,4 +164,4 @@ const TodayMealCard = ({
 	);
 };
 
-export default TodayMealCard;
+export default MealCard;
