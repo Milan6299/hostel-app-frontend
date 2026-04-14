@@ -36,6 +36,7 @@ const formSchema = z.object({
 	first_name: z.string().min(1),
 	last_name: z.string().min(1),
 	roll_no: z.string().min(3),
+	gender: z.enum(["M", "F", "O"]),
 	department: z.string().min(2),
 	room_no: z.number().min(1),
 	phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
@@ -57,6 +58,7 @@ export function StudentProfileForm() {
 			first_name: "",
 			last_name: "",
 			roll_no: "",
+			gender: "M",
 			department: "",
 			room_no: 1,
 			phone: "",
@@ -189,6 +191,31 @@ export function StudentProfileForm() {
 									/>
 								</FieldGroup>
 								<FieldGroup className="grid grid-cols-2">
+									{/* Gender */}
+									<Controller
+										name="gender"
+										control={form.control}
+										render={({ field, fieldState }) => (
+											<Field data-invalid={fieldState.invalid}>
+												<FieldLabel>Gender</FieldLabel>
+
+												<SelectionMenu
+													placeholder="Select gender"
+													items={[
+														{ value: "M", label: "Male" },
+														{ value: "F", label: "Female" },
+														{ value: "O", label: "Other" },
+													]}
+													value={field.value}
+													onChange={field.onChange}
+												/>
+
+												{fieldState.invalid && (
+													<FieldError errors={[fieldState.error]} />
+												)}
+											</Field>
+										)}
+									/>
 									{/* Roll Number */}
 									<Controller
 										name="roll_no"

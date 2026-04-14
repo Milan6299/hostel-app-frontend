@@ -36,6 +36,7 @@ const formSchema = z.object({
 	first_name: z.string().min(1),
 	last_name: z.string().min(1),
 	phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
+	gender: z.enum(["M", "F", "O"]),
 	hostel_block: z.number().min(1),
 	hostel_type: z.enum(["boys", "girls"]),
 });
@@ -51,6 +52,7 @@ export function CookProfileForm() {
 		defaultValues: {
 			first_name: "",
 			last_name: "",
+			gender: "M",
 			phone: "",
 			hostel_block: 1,
 			hostel_type: "boys",
@@ -186,6 +188,32 @@ export function CookProfileForm() {
 										<Field data-invalid={fieldState.invalid}>
 											<FieldLabel>Phone</FieldLabel>
 											<Input {...field} placeholder="Phone Number" />
+											{fieldState.invalid && (
+												<FieldError errors={[fieldState.error]} />
+											)}
+										</Field>
+									)}
+								/>
+
+								{/* Gender */}
+								<Controller
+									name="gender"
+									control={form.control}
+									render={({ field, fieldState }) => (
+										<Field data-invalid={fieldState.invalid}>
+											<FieldLabel>Gender</FieldLabel>
+
+											<SelectionMenu
+												placeholder="Select gender"
+												items={[
+													{ value: "M", label: "Male" },
+													{ value: "F", label: "Female" },
+													{ value: "O", label: "Other" },
+												]}
+												value={field.value}
+												onChange={field.onChange}
+											/>
+
 											{fieldState.invalid && (
 												<FieldError errors={[fieldState.error]} />
 											)}

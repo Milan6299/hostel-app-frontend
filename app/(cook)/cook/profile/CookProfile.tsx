@@ -23,23 +23,19 @@ import { getProfile } from "@/lib/auth/auth";
 import { Button } from "@/components/ui/button";
 import { SkeletonForm } from "@/components/skeleton-form";
 
-export type StudentProfileSchema = z.infer<typeof formSchema>;
+export type CookProfileSchema = z.infer<typeof formSchema>;
 
 const formSchema = z.object({
 	first_name: z.string().min(1),
 	last_name: z.string().min(1),
-	roll_no: z.string().min(3),
 	gender: z.enum(["M", "F", "O"]),
-	department: z.string().min(2),
-	room_no: z.number().min(1),
 	phone: z.string().regex(/^[0-9]{10}$/, "Phone must be 10 digits"),
-	year: z.number().min(1).max(5),
 	hostel_block: z.number().min(1),
 	hostel_type: z.enum(["boys", "girls"]),
 });
 
-const StudentProfile = () => {
-	const [proData, setProData] = useState<StudentProfileSchema | null>(null);
+const CookProfile = () => {
+	const [proData, setProData] = useState<CookProfileSchema | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const router = useRouter();
@@ -49,12 +45,12 @@ const StudentProfile = () => {
 		await getProfile()
 			.then((resp) => {
 				console.log(resp);
-				toast("Data GET success!");
 				setProData(resp);
 			})
 			.catch((err) => {
 				const { status } = err || {};
 				console.log(status);
+				toast.error("Error occured! Try again!");
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -70,40 +66,32 @@ const StudentProfile = () => {
 				first_name: proData.first_name || "",
 				last_name: proData.last_name || "",
 				gender: proData.gender || "M",
-				roll_no: proData.roll_no || "",
-				department: proData.department || "",
-				room_no: proData.room_no || 1,
 				phone: proData.phone || "",
-				year: proData.year || 1,
 				hostel_type: proData.hostel_type || "boys",
 				hostel_block: proData.hostel_block || 1,
 			});
 		}
 	}, [proData]);
 
-	const form = useForm<StudentProfileSchema>({
+	const form = useForm<CookProfileSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			first_name: "",
 			last_name: "",
 			gender: "M",
-			roll_no: "",
-			department: "",
-			room_no: 1,
 			phone: "",
-			year: 1,
 			hostel_type: "boys",
 			hostel_block: 1,
 		},
 	});
 
-	async function onSubmit(formdata: StudentProfileSchema) {
+	async function onSubmit(formdata: CookProfileSchema) {
 		setIsLoading(true);
 		try {
 			const response = await updateProfile(formdata);
 
 			if (response) {
-				toast(`${response.message}`);
+				toast.success(`${response.message}`);
 			}
 		} catch (err: any) {
 			const { status, code, error } = err || {};
@@ -111,7 +99,7 @@ const StudentProfile = () => {
 			console.log(err);
 
 			if (status === 404) {
-				toast(error);
+				toast.error(error);
 				return;
 			}
 
@@ -120,8 +108,7 @@ const StudentProfile = () => {
 				return;
 			}
 
-			// fallback
-			toast(error || "Something went wrong");
+			toast.error(error || "Something went wrong");
 		} finally {
 			setIsLoading(false);
 		}
@@ -134,7 +121,7 @@ const StudentProfile = () => {
 		<div>
 			<div className="w-full grid gap-4 sm:gap-8 mx-auto ">
 				<div>
-					<form id="student-profile" onSubmit={form.handleSubmit(onSubmit)}>
+					<form id="cook-profile" onSubmit={form.handleSubmit(onSubmit)}>
 						<FieldSet disabled={isLoading} className="grid ">
 							<FieldGroup>
 								{/* 
@@ -213,101 +200,8 @@ const StudentProfile = () => {
 								</FieldGroup>
 							</FieldGroup>
 							<FieldGroup>
-								<FieldTitle className="text-xl">Education Details</FieldTitle>
-								<FieldGroup className="grid sm:grid-cols-3">
-									{/* Roll Number */}
-									<Controller
-										name="roll_no"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Roll Number</FieldLabel>
-												<Input {...field} placeholder="Roll Number" />
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-
-									{/* Department */}
-									<Controller
-										name="department"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Department</FieldLabel>
-												<Input {...field} placeholder="Department" />
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-
-									{/* Year */}
-									<Controller
-										name="year"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Year</FieldLabel>
-												{
-													// <Input
-													// 	type="number"
-													// 	{...field}
-													// 	onChange={(e) =>
-													// 		field.onChange(e.target.valueAsNumber)
-													// 	}
-													//
-													// />
-												}
-												<SelectionMenu
-													placeholder="Select Year"
-													items={[
-														{ value: "1", label: "1st" },
-														{ value: "2", label: "2nd" },
-														{ value: "3", label: "3rd" },
-														{ value: "4", label: "4th" },
-														{ value: "5", label: "5th" },
-													]}
-													value={String(field.value)}
-													onChange={(val) => field.onChange(Number(val))}
-												/>
-
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-								</FieldGroup>
-							</FieldGroup>
-							<FieldGroup>
 								<FieldTitle className="text-xl">Hostel Details</FieldTitle>
 								<FieldGroup className="grid sm:grid-cols-4">
-									{/* Room */}
-									<Controller
-										name="room_no"
-										control={form.control}
-										render={({ field, fieldState }) => (
-											<Field data-invalid={fieldState.invalid}>
-												<FieldLabel>Room Number</FieldLabel>
-												<Input
-													type="number"
-													{...field}
-													placeholder="Room Number"
-													onChange={(e) =>
-														field.onChange(Number(e.target.value))
-													}
-												/>
-												{fieldState.invalid && (
-													<FieldError errors={[fieldState.error]} />
-												)}
-											</Field>
-										)}
-									/>
-
 									{/* Hostel Type */}
 									<Controller
 										name="hostel_type"
@@ -375,4 +269,4 @@ const StudentProfile = () => {
 	);
 };
 
-export default StudentProfile;
+export default CookProfile;
