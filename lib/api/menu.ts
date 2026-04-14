@@ -1,6 +1,7 @@
 import { handleApiError } from "../auth/auth";
 import { api } from "../helpers";
-const menuUrl = "api/menu";
+
+export const menuUrl = "api/menu";
 
 export const getItem = async (id: number) => {
 	try {
@@ -21,7 +22,7 @@ export const getAllItems = async () => {
 };
 export const getWeeklyMenu = async () => {
 	try {
-		const resp = await api.get(`${menuUrl}/weekly-menu/`);
+		const resp = await api.get(`${menuUrl}/weekly-menu/list/`);
 		return resp.data;
 	} catch (err: any) {
 		throw handleApiError(err);

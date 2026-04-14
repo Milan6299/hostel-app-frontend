@@ -3,6 +3,7 @@ import { api } from "@/lib/helpers";
 import { authUrl, handleApiError } from "../auth/auth";
 import { CompleteStudentProfileSchema } from "@/app/complete-profile/[role]/StudentForm";
 import { CompleteCookProfileSchema } from "@/app/complete-profile/[role]/CookForm";
+import { CookProfileSchema } from "@/app/(cook)/cook/profile/CookProfile";
 
 export async function getProfile() {
 	try {
@@ -25,7 +26,9 @@ export async function completeProfile(
 	}
 }
 
-export async function updateProfile(data: StudentProfileSchema) {
+export async function updateProfile(
+	data: StudentProfileSchema | CookProfileSchema,
+) {
 	try {
 		const resp = await api.patch(`${authUrl}update_profile/`, data);
 		console.log(resp.data);
