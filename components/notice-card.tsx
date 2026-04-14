@@ -1,3 +1,4 @@
+"use client";
 import {
 	Card,
 	CardContent,
@@ -8,39 +9,39 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "./ui/button";
 import Link from "next/link";
-
-const notices = [
-	"Dinner delayed by 30 minutes",
-	"Special sweets on Friday",
-	"Kitchen maintenance on Sunday",
-];
+import { useNoticeStore } from "@/lib/store/useNoticeStore";
+import SkeletonCard from "./skeleton-card";
+import { useEffect } from "react";
+import { Check } from "lucide-react";
 
 const NoticesCard = () => {
+	const { notices, isLoading, fetchNotices } = useNoticeStore();
+
+	useEffect(() => {
+		fetchNotices();
+	}, [fetchNotices]);
+
+	if (isLoading) return <SkeletonCard />;
 	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-center justify-between">
-					<CardTitle>Notices</CardTitle>
-				</div>
-			</CardHeader>
-			<CardContent className="space-y-2">
-				{notices.map((note, i) => (
-					<div key={i} className="flex justify-between text-sm gap-2">
-						<span>{note}</span>
-						<Badge variant="secondary" className="max-h-max">
-							New
-						</Badge>
+		<Link href={"/student/notices/"}>
+			<Card className="w-full">
+				<CardHeader>
+					<div className="flex items-center justify-between">
+						<CardTitle>Notices</CardTitle>
 					</div>
-				))}
-			</CardContent>
-			<CardFooter className="mt-auto">
-				<Link href={"/student/notices"} className="ml-auto">
-					<Button size={"responsive"} variant={"info"}>
-						View
-					</Button>
-				</Link>
-			</CardFooter>
-		</Card>
+				</CardHeader>
+				<CardContent className="space-y-2">
+					{notices.map((notice) => (
+						<div key={notice.id} className="flex justify-between text-sm gap-2">
+							<span>{notice.title}</span>
+							<Badge variant="default" className="max-h-max">
+								{notice.is_seen ? <Check /> : "New"}
+							</Badge>
+						</div>
+					))}
+				</CardContent>
+			</Card>
+		</Link>
 	);
 };
 
