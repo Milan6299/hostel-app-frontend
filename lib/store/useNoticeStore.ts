@@ -43,7 +43,9 @@ export const useNoticeStore = create<NoticeState>((set, get) => ({
 	fetchUnreadCount: async () => {
 		try {
 			const response = await api.get(`${noticesURL}/unread-count/`);
-			set({ unreadCount: response.data });
+			set({ unreadCount: response.data.unread_count });
+			// console.log(response.data);
+			response.data.unread_count !== 0 && toast.info("You have unread Notice!");
 		} catch (err) {
 			console.error(err);
 		}
@@ -61,7 +63,7 @@ export const useNoticeStore = create<NoticeState>((set, get) => ({
 			});
 		} catch (error) {
 			console.error("Failed to mark notice as seen");
-			toast("Failed to mark current notice as seen");
+			toast.error("Failed to mark current notice as seen");
 		}
 	},
 

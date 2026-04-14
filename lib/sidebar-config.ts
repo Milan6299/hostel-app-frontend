@@ -7,6 +7,7 @@ import {
 	Users,
 	BarChart3,
 	Settings,
+	Package,
 } from "lucide-react";
 
 export const sidebarConfig = {
@@ -20,6 +21,7 @@ export const sidebarConfig = {
 
 	cook: [
 		{ title: "Home", url: "/cook", icon: Home },
+		{ title: "Inventory", url: "/cook/inventory", icon: Package },
 		{ title: "Menu", url: "/cook/menu", icon: Utensils },
 	],
 
