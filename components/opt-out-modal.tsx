@@ -3,33 +3,23 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/helpers";
-import { getISTDate } from "./today-meals";
-
-function getTomorrowDate() {
-	const d = new Date();
-	d.setDate(d.getDate() + 1);
-	return new Intl.DateTimeFormat("en-CA", {
-		timeZone: "Asia/Kolkata",
-		year: "numeric",
-		month: "2-digit",
-		day: "2-digit",
-	}).format(d);
-}
+import { Separator } from "./ui/separator";
 
 const OptOutModal = ({ meal, onClose, onSuccess }: any) => {
-	const today = getISTDate();
-	const tomorrow = getTomorrowDate();
+	// Pull the exact date directly from the meal data the backend gave us
+	const mealDate = meal.date;
 
-	const [endDate, setEndDate] = useState(tomorrow);
+	// Default the end date for a range opt-out to the same date
+	const [endDate, setEndDate] = useState(mealDate);
 	const [saving, setSaving] = useState(false);
 
-	const handleTodayOptOut = async () => {
+	const handleSingleMealOptOut = async () => {
 		try {
 			setSaving(true);
 
 			await api.post("/api/menu/opt-outs/", {
-				start_date: today,
-				end_date: today,
+				start_date: mealDate,
+				end_date: mealDate,
 				meal_type: meal.meal_type,
 			});
 
@@ -41,12 +31,12 @@ const OptOutModal = ({ meal, onClose, onSuccess }: any) => {
 		}
 	};
 
-	const handleFutureOptOut = async () => {
+	const handleRangeOptOut = async () => {
 		try {
 			setSaving(true);
 
 			await api.post("/api/menu/opt-outs/", {
-				start_date: tomorrow,
+				start_date: mealDate, // Starts from the card's date
 				end_date: endDate,
 				meal_type: "both",
 			});
@@ -60,47 +50,62 @@ const OptOutModal = ({ meal, onClose, onSuccess }: any) => {
 	};
 
 	return (
-		<div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-			<div className="bg-card p-6 rounded-xl w-full max-w-md space-y-5">
+		<div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+			<div className="bg-card p-8 rounded-xl w-full max-w-md space-y-4 shadow-lg">
 				<h2 className="text-lg font-semibold">Opt out of meals</h2>
 
-				{/* TODAY */}
+				{/* 2️⃣ RANGE OPT-OUT (Starts from Card Data) */}
+				<div className=" space-y-4">
+					<p className="text-sm font-medium text-muted-foreground">
+						Or opt out for multiple days (Both Meals):
+					</p>
+
+					<div className="flex items-center gap-2">
+						<span className="text-sm font-medium w-12">From:</span>
+						<span className="text-sm text-muted-foreground">{mealDate}</span>
+					</div>
+
+					<div className="flex items-center gap-2 ">
+						<span className="text-sm font-medium w-12">To:</span>
+						<input
+							type="date"
+							value={endDate}
+							min={mealDate} // Prevents picking a date before the card's date
+							onChange={(e) => setEndDate(e.target.value)}
+							className="flex-1 p-2 border rounded-md text-sm"
+						/>
+					</div>
+
+					<Button
+						variant="secondary"
+						onClick={handleRangeOptOut}
+						disabled={saving || endDate < mealDate}
+						className="w-full"
+					>
+						Opt Out Range
+					</Button>
+				</div>
+				<Separator />
+
+				{/* 1️⃣ SPECIFIC MEAL (Uses Card Data) */}
 				<div>
 					<Button
 						variant="destructive"
-						onClick={handleTodayOptOut}
+						onClick={handleSingleMealOptOut}
 						disabled={saving || !meal.can_modify}
 						className="w-full"
 					>
-						Opt Out Today ({meal.meal_type})
+						Opt Out of This Meal ({meal.meal_type})
 					</Button>
 
 					{!meal.can_modify && (
-						<p className="text-xs text-red-400 mt-1">Cutoff passed for today</p>
+						<p className="text-xs text-red-500 mt-2 text-center">
+							Cutoff passed for this meal
+						</p>
 					)}
 				</div>
-
-				{/* FUTURE */}
-				<div className="border-t pt-4 space-y-2">
-					<input
-						type="date"
-						value={endDate}
-						min={tomorrow}
-						onChange={(e) => setEndDate(e.target.value)}
-						className="w-full p-2 border rounded"
-					/>
-
-					<Button
-						onClick={handleFutureOptOut}
-						disabled={saving}
-						className="w-full"
-					>
-						Opt Out from Tomorrow → {endDate}
-					</Button>
-				</div>
-
 				<Button variant="outline" onClick={onClose} className="w-full">
-					Close
+					Cancel
 				</Button>
 			</div>
 		</div>
